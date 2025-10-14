@@ -15,7 +15,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+    <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: 400 }}>
       <Group justify="center">
         <TextInput
           value={query}

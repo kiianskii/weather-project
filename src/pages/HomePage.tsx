@@ -1,7 +1,7 @@
 import { Stack } from "@mantine/core";
-import SearchBar from "../components/SearchBar";
-import WeatherCard from "../components/WeatherCard";
-import WeatherChart from "../components/WeatherChart";
+import SearchBar from "../components/widgets/SearchBar";
+import WeatherCard from "../components/widgets/WeatherCard";
+import WeatherChart from "../components/widgets/WeatherChart";
 import { useWeather } from "../hooks/useWeather";
 
 const HomePage = () => {
