@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Stack, Text, Group, Grid, Card, Flex } from "@mantine/core";
 import SearchBar from "../components/widgets/SearchBar";
 import WeatherCard from "../components/widgets/WeatherCard";
 import HourlyForecast from "../components/widgets/HourlyForecast";
-import { useWeather } from "../hooks/useWeather";
+import WeeklyForecast from "../components/widgets/WeeklyForecast";
+
 import {
   IconWind,
   IconDroplet,
@@ -10,19 +13,40 @@ import {
   IconCloudRain,
   IconSun,
 } from "@tabler/icons-react";
+import { useWeatherStore } from "../store/weatherStore";
 
-const Today = () => {
-  const { weather, loading, error, fetchWeatherData } = useWeather();
+const CityWeather = () => {
+  const { name } = useParams<{ name?: string }>();
+  const { weather, loading, error, fetchWeatherData } = useWeatherStore();
+
+  useEffect(() => {
+    if (name) {
+      fetchWeatherData(name);
+    }
+  }, [name, fetchWeatherData]);
+
+  if (!name) {
+    return (
+      <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
+        <Flex justify="center">
+          <SearchBar />
+        </Flex>
+        <Text ta="center" c="dimmed">
+          Enter a city name to view its weather forecast
+        </Text>
+      </Stack>
+    );
+  }
 
   return (
     <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
       <Flex justify="center">
-        <SearchBar onSearch={fetchWeatherData} />
+        <SearchBar />
       </Flex>
 
-      {loading && <Text style={{ textAlign: "center" }}>Loading...</Text>}
+      {loading && <Text ta="center">Loading...</Text>}
       {error && (
-        <Text c="red" style={{ textAlign: "center" }}>
+        <Text c="red" ta="center">
           {error}
         </Text>
       )}
@@ -34,7 +58,7 @@ const Today = () => {
             <HourlyForecast hourly={weather.hourly} />
           </Flex>
 
-          <Grid grow gutter="md" style={{ marginTop: "1rem" }}>
+          <Grid grow gutter="md" mt="md">
             <Grid.Col span={3}>
               <Card shadow="sm" p="md" radius="md">
                 <Group>
@@ -112,10 +136,12 @@ const Today = () => {
               </Card>
             </Grid.Col>
           </Grid>
+
+          <WeeklyForecast daily={weather.daily} city={weather.city} />
         </>
       )}
     </Stack>
   );
 };
 
-export default Today;
+export default CityWeather;

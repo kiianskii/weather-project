@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { TextInput, Button, Group } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-interface SearchBarProps {
-  onSearch: (city: string) => void;
-}
-
-const SearchBar = ({ onSearch }: SearchBarProps) => {
+const SearchBar = () => {
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) onSearch(query);
+    const city = query.trim();
+
+    if (city) {
+      if (location.pathname.startsWith("/city")) {
+        navigate(`/city/${city}`);
+      }
+      setQuery("");
+    }
   };
 
   return (

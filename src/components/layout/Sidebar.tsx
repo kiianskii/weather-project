@@ -9,16 +9,16 @@ const Sidebar = () => {
   return (
     <Stack p="sm" gap="xs">
       <NavLink
-        label="Today"
+        label="Home"
         leftSection={<IconHome size={16} />}
-        active={location.pathname === "/today"}
-        onClick={() => navigate("/today")}
+        active={location.pathname === "/"}
+        onClick={() => navigate("/")}
       />
       <NavLink
-        label="Week Forecast"
+        label="City Forecast"
         leftSection={<IconCalendar size={16} />}
-        active={location.pathname === "/week"}
-        onClick={() => navigate("/week")}
+        active={location.pathname === "/city"}
+        onClick={() => navigate("/city")}
       />
     </Stack>
   );

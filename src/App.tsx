@@ -1,8 +1,8 @@
 import { MantineProvider, createTheme } from "@mantine/core";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
-import Today from "./pages/Today";
-import Week from "./pages/Week";
+import HomePage from "./pages/HomePage";
+import CityWeather from "./pages/CityWeather";
 
 const theme = createTheme({
   fontFamily: "Inter, sans-serif",
@@ -16,9 +16,9 @@ function App() {
       <BrowserRouter>
         <AppLayout>
           <Routes>
-            <Route path="/" element={<Navigate to="/today" replace />} />
-            <Route path="/today" element={<Today />} />
-            <Route path="/week" element={<Week />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/city" element={<CityWeather />} />
+            <Route path="/city/:name" element={<CityWeather />} />
           </Routes>
         </AppLayout>
       </BrowserRouter>

@@ -1,23 +1,12 @@
 import { Stack } from "@mantine/core";
 import SearchBar from "../components/widgets/SearchBar";
-import WeatherCard from "../components/widgets/WeatherCard";
-import WeatherChart from "../components/widgets/WeatherChart";
-import { useWeather } from "../hooks/useWeather";
+import GlobalWeatherOverview from "../components/widgets/GlobalWeatherOverview";
 
 const HomePage = () => {
-  const { weather, loading, error, fetchWeatherData } = useWeather();
-
   return (
-    <Stack gap="md" align="center">
-      <SearchBar onSearch={fetchWeatherData} />
-      {loading && <div>Loading...</div>}
-      {error && <div>{error}</div>}
-      {weather && (
-        <>
-          <WeatherCard weather={weather} />
-          <WeatherChart weather={weather} />
-        </>
-      )}
+    <Stack gap="lg" align="center" p="md" style={{ width: "100%" }}>
+      <SearchBar />
+      <GlobalWeatherOverview />
     </Stack>
   );
 };
