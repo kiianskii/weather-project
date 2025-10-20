@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Stack, Text, Group, Grid, Card, Flex } from "@mantine/core";
 import SearchBar from "../components/widgets/SearchBar";
-import WeatherCard from "../components/widgets/WeatherCard";
+import WeatherCard from "../components/widgets/cards/WeatherCard";
 import HourlyForecast from "../components/widgets/HourlyForecast";
 import WeeklyForecast from "../components/widgets/WeeklyForecast";
 
@@ -14,6 +14,7 @@ import {
   IconSun,
 } from "@tabler/icons-react";
 import { useWeatherStore } from "../store/weatherStore";
+import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
 
 const CityWeather = () => {
   const { name } = useParams<{ name?: string }>();
@@ -31,9 +32,10 @@ const CityWeather = () => {
         <Flex justify="center">
           <SearchBar />
         </Flex>
-        <Text ta="center" c="dimmed">
+        {/* <Text ta="center" c="dimmed">
           Enter a city name to view its weather forecast
-        </Text>
+        </Text> */}
+        <WeatherPlaceholder />
       </Stack>
     );
   }

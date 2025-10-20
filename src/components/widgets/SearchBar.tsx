@@ -6,16 +6,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 const SearchBar = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const city = query.trim();
 
     if (city) {
-      if (location.pathname.startsWith("/city")) {
-        navigate(`/city/${city}`);
-      }
+      navigate(`/city/${city}`);
+
       setQuery("");
     }
   };
