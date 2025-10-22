@@ -8,6 +8,7 @@ import {
   Flex,
   Badge,
   Box,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { IconSearch, IconX, IconPencil } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +32,9 @@ const SearchBar = () => {
 
   const handleClear = () => setQuery("");
 
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
   if (city && !editing) {
     return (
       <Box
@@ -39,23 +43,24 @@ const SearchBar = () => {
           alignItems: "center",
           gap: 6,
           maxWidth: 280,
-          border: "1px solid rgba(0,0,0,0.15)",
+          border: `1px solid ${
+            isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)"
+          }`,
           borderRadius: "999px",
           padding: "4px 8px",
-          background: "rgba(255,255,255,0.7)",
+          background: isDark ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.7)",
           backdropFilter: "blur(6px)",
         }}
       >
         <Badge
           variant="light"
           radius="xl"
-          size="sm"
           style={{
             fontWeight: 600,
             textTransform: "uppercase",
             letterSpacing: "0.03em",
             flexGrow: 1,
-            color: "#333",
+            color: isDark ? "#fff" : "#333",
             background: "transparent",
             border: "none",
             boxShadow: "none",
@@ -68,7 +73,7 @@ const SearchBar = () => {
           <ActionIcon
             size="sm"
             radius="xl"
-            color="gray"
+            color={isDark ? "gray" : "dark"}
             variant="subtle"
             onClick={() => setEditing(true)}
             title="Edit city"
@@ -79,7 +84,7 @@ const SearchBar = () => {
           <ActionIcon
             size="sm"
             radius="xl"
-            color="gray"
+            color={isDark ? "gray" : "dark"}
             variant="subtle"
             onClick={() => setCity(null)}
             title="Clear city"
@@ -91,7 +96,6 @@ const SearchBar = () => {
     );
   }
 
-  // Якщо користувач редагує або ще не ввів місто
   return (
     <Transition mounted={editing || !city} transition="fade" duration={200}>
       {(styles) => (

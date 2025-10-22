@@ -1,5 +1,12 @@
 import { useEffect, useRef } from "react";
-import { ScrollArea, Group, Stack, Text, Card } from "@mantine/core";
+import {
+  ScrollArea,
+  Group,
+  Stack,
+  Text,
+  Card,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { IconCloud, IconCloudRain, IconSun } from "@tabler/icons-react";
 
 interface HourlyWeather {
@@ -21,6 +28,10 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
   const currentHour = new Date().getHours();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const { colorScheme } = useMantineColorScheme();
+
+  const isDark = colorScheme === "dark";
 
   const hours = hourly.time
     .map((time, index) => ({
@@ -87,12 +98,20 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
                   minWidth: 75,
                   textAlign: "center",
                   background: isCurrent
-                    ? "linear-gradient(135deg, #b5d0ff, #d6c4ff)"
+                    ? isDark
+                      ? "linear-gradient(135deg, #4b4b5f, #6a5acd)"
+                      : "linear-gradient(135deg, #b5d0ff, #d6c4ff)"
+                    : isDark
+                    ? "rgba(255, 255, 255, 0.05)"
                     : "rgba(255, 255, 255, 0.15)",
                   border: isCurrent
-                    ? "1px solid rgba(255,255,255,0.4)"
-                    : "1px solid rgba(255,255,255,0.2)",
-                  color: "inherit",
+                    ? isDark
+                      ? "1px solid rgba(255,255,255,0.4)"
+                      : "1px solid rgba(0,0,0,0.2)"
+                    : isDark
+                    ? "1px solid rgba(255,255,255,0.2)"
+                    : "1px solid rgba(0,0,0,0.1)",
+                  color: isDark ? "#fff" : "#000",
                   transition: "all 0.3s ease",
                 }}
               >

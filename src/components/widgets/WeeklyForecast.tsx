@@ -1,4 +1,13 @@
-import { Card, Stack, Text, Group, ScrollArea, Tooltip } from "@mantine/core";
+import {
+  Card,
+  Stack,
+  Text,
+  Group,
+  ScrollArea,
+  Tooltip,
+  useMantineTheme,
+  useMantineColorScheme,
+} from "@mantine/core";
 import {
   IconCloud,
   IconSun,
@@ -24,6 +33,9 @@ interface WeeklyForecastProps {
 }
 
 const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
   if (!daily?.time?.length) return null;
 
   const days = daily.time.map((date, index) => ({
@@ -56,7 +68,7 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
       p="md"
       style={{
         flex: 1,
-        background: "rgba(255, 255, 255, 0.08)",
+        background: isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.08)",
         backdropFilter: "blur(6px)",
       }}
     >
@@ -85,20 +97,30 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                 style={{
                   flex: "1 1 120px",
                   textAlign: "center",
-                  background: "linear-gradient(135deg, #9dbafc, #c6b5ff)",
-                  border: "1px solid rgba(255,255,255,0.3)",
-                  color: "#000",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #2c2c3e, #3f3a56)"
+                    : "linear-gradient(135deg, #9dbafc, #c6b5ff)",
+                  border: isDark
+                    ? "1px solid rgba(255,255,255,0.2)"
+                    : "1px solid rgba(255,255,255,0.3)",
+                  color: isDark ? "#fff" : "#000",
+                  boxShadow: isDark
+                    ? "0 2px 6px rgba(0,0,0,0.3)"
+                    : "0 2px 6px rgba(0,0,0,0.15)",
                   transition: "transform 0.15s ease, box-shadow 0.15s ease",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.boxShadow =
-                    "0 4px 12px rgba(0,0,0,0.25)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.boxShadow =
-                    "0 2px 6px rgba(0,0,0,0.15)")
-                }
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = isDark
+                    ? "0 4px 12px rgba(0,0,0,0.5)"
+                    : "0 4px 12px rgba(0,0,0,0.25)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = isDark
+                    ? "0 2px 6px rgba(0,0,0,0.3)"
+                    : "0 2px 6px rgba(0,0,0,0.15)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
               >
                 <Stack gap={3} align="center">
                   <Text size="sm" fw={600}>
