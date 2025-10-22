@@ -6,6 +6,7 @@ interface HourlyWeather {
   time: string[];
   temperature_2m: number[];
   precipitation: number[];
+  precipitation_probability?: number[];
   cloudcover: number[];
 }
 
@@ -28,6 +29,7 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
       day: new Date(time).getDate(),
       temp: hourly.temperature_2m[index],
       rain: hourly.precipitation[index],
+      rainProb: hourly.precipitation_probability?.[index] ?? 0,
       clouds: hourly.cloudcover[index],
     }))
     .filter((h) => h.day === today);
@@ -39,20 +41,17 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
       scrollAreaRef.current &&
       cardRefs.current[currentIndex]
     ) {
-      const el = cardRefs.current[currentIndex];
-      if (el) {
-        el.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
-        });
-      }
+      cardRefs.current[currentIndex]?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
     }
   }, [hours]);
 
-  const getIcon = (rain: number, clouds: number) => {
-    if (rain > 0.3) return <IconCloudRain size={20} />;
-    if (clouds > 60) return <IconCloud size={20} />;
+  const getIcon = (rain: number, rainProb: number, clouds: number) => {
+    if (rain > 0.2 || rainProb > 50) return <IconCloudRain size={20} />;
+    if (clouds > 70) return <IconCloud size={20} />;
     return <IconSun size={20} />;
   };
 
@@ -99,7 +98,7 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
               >
                 <Stack gap={3} align="center">
                   <Text size="xs">{h.time}:00</Text>
-                  {getIcon(h.rain, h.clouds)}
+                  {getIcon(h.rain, h.rainProb, h.clouds)}
                   <Text size="sm" fw={600}>
                     {Math.round(h.temp)}°
                   </Text>

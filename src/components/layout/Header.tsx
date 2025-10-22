@@ -1,5 +1,6 @@
 import { Group, Text, ActionIcon } from "@mantine/core";
-import { IconSun, IconMoon, IconLanguage } from "@tabler/icons-react";
+import { IconSun, IconLanguage } from "@tabler/icons-react";
+import SearchBar from "../widgets/SearchBar";
 
 const Header = () => {
   return (
@@ -9,6 +10,7 @@ const Header = () => {
       </Text>
 
       <Group>
+        <SearchBar />
         <ActionIcon variant="light" radius="xl" aria-label="Change language">
           <IconLanguage size={18} />
         </ActionIcon>

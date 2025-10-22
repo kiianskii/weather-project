@@ -22,15 +22,11 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
   const index = hourly.time.indexOf(current_weather.time);
   const humidity = hourly.relative_humidity_2m?.[index] ?? 0;
   const pressure = hourly.surface_pressure?.[index] ?? 0;
-  const clouds = hourly.cloudcover?.[index] ?? 0;
 
-  // Визначаємо тип погоди
   let weatherType: "sunny" | "cloudy" | "rainy" = "sunny";
   if (current_weather.weathercode >= 3 && current_weather.weathercode < 60)
     weatherType = "cloudy";
   else if (current_weather.weathercode >= 60) weatherType = "rainy";
-
-  // Фони для різних погод
   const backgrounds: Record<typeof weatherType, string> = {
     sunny:
       "https://images.unsplash.com/photo-1615286628718-4a4c8924d0eb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740",

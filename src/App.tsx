@@ -18,7 +18,6 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/city" element={<CityWeather />} />
-            <Route path="/city/:name" element={<CityWeather />} />
           </Routes>
         </AppLayout>
       </BrowserRouter>

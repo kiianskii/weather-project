@@ -9,6 +9,7 @@ import {
   IconGauge,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { useWeatherStore } from "../../../store/weatherStore";
 
 interface WeatherCardProps {
   weather: any;
@@ -63,7 +64,10 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
 
   const WeatherIcon = icons[weatherType];
 
-  const handleClick = () => navigate(`/city/${city.toLowerCase()}`);
+  const { setCity } = useWeatherStore();
+  const handleClick = () => {
+    setCity(city.toLowerCase()), navigate(`/city`);
+  };
 
   const weekData: WeekDayData[] = daily.time.map((time: string, i: number) => ({
     date: new Date(time).toLocaleDateString("en-US", { weekday: "short" }),

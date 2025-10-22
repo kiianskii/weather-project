@@ -1,11 +1,8 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { Stack, Text, Group, Grid, Card, Flex } from "@mantine/core";
-import SearchBar from "../components/widgets/SearchBar";
 import WeatherCard from "../components/widgets/cards/WeatherCard";
 import HourlyForecast from "../components/widgets/HourlyForecast";
 import WeeklyForecast from "../components/widgets/WeeklyForecast";
-
 import {
   IconWind,
   IconDroplet,
@@ -17,35 +14,47 @@ import { useWeatherStore } from "../store/weatherStore";
 import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
 
 const CityWeather = () => {
-  const { name } = useParams<{ name?: string }>();
-  const { weather, loading, error, fetchWeatherData } = useWeatherStore();
+  const { weather, loading, error, fetchWeatherData, city } = useWeatherStore();
 
   useEffect(() => {
-    if (name) {
-      fetchWeatherData(name);
+    if (city) {
+      fetchWeatherData(city);
     }
-  }, [name, fetchWeatherData]);
+  }, [city, fetchWeatherData]);
 
-  if (!name) {
+  if (!city) {
     return (
       <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
-        <Flex justify="center">
-          <SearchBar />
-        </Flex>
-        {/* <Text ta="center" c="dimmed">
-          Enter a city name to view its weather forecast
-        </Text> */}
         <WeatherPlaceholder />
       </Stack>
     );
   }
 
+  if (!weather) return null;
+
+  const getClosestHourIndex = (times: string[], currentTime: string) => {
+    const target = new Date(currentTime).getTime();
+    let closestIndex = 0;
+    let smallestDiff = Infinity;
+
+    times.forEach((t, i) => {
+      const diff = Math.abs(new Date(t).getTime() - target);
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = i;
+      }
+    });
+
+    return closestIndex;
+  };
+
+  const closestIndex = getClosestHourIndex(
+    weather.hourly.time,
+    weather.current_weather.time
+  );
+
   return (
     <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
-      <Flex justify="center">
-        <SearchBar />
-      </Flex>
-
       {loading && <Text ta="center">Loading...</Text>}
       {error && (
         <Text c="red" ta="center">
@@ -53,7 +62,7 @@ const CityWeather = () => {
         </Text>
       )}
 
-      {weather && (
+      {!loading && (
         <>
           <Flex align="flex-start" gap="xl" style={{ width: "100%" }}>
             <WeatherCard weather={weather} />
@@ -82,11 +91,7 @@ const CityWeather = () => {
                   <Stack gap={2}>
                     <Text size="sm">Humidity</Text>
                     <Text fw={600}>
-                      {weather.hourly.relative_humidity_2m?.[
-                        weather.hourly.time.indexOf(
-                          weather.current_weather.time
-                        )
-                      ] ?? 0}
+                      {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}
                       %
                     </Text>
                   </Stack>
@@ -101,12 +106,11 @@ const CityWeather = () => {
                   <Stack gap={2}>
                     <Text size="sm">Pressure</Text>
                     <Text fw={600}>
-                      {weather.hourly.surface_pressure?.[
-                        weather.hourly.time.indexOf(
-                          weather.current_weather.time
-                        )
-                      ] ?? 0}{" "}
-                      hPa
+                      {weather.hourly.surface_pressure?.[closestIndex]
+                        ? `${weather.hourly.surface_pressure[
+                            closestIndex
+                          ].toFixed(0)} hPa`
+                        : "—"}
                     </Text>
                   </Stack>
                 </Group>
@@ -116,9 +120,8 @@ const CityWeather = () => {
             <Grid.Col span={3}>
               <Card shadow="sm" p="md" radius="md">
                 <Group>
-                  {weather.hourly.precipitation?.[
-                    weather.hourly.time.indexOf(weather.current_weather.time)
-                  ] > 0 ? (
+                  {weather.hourly.precipitation_probability?.[closestIndex] >
+                  30 ? (
                     <IconCloudRain />
                   ) : (
                     <IconSun />
@@ -126,12 +129,10 @@ const CityWeather = () => {
                   <Stack gap={2}>
                     <Text size="sm">Precipitation</Text>
                     <Text fw={600}>
-                      {weather.hourly.precipitation?.[
-                        weather.hourly.time.indexOf(
-                          weather.current_weather.time
-                        )
-                      ]?.toFixed(1) ?? 0}{" "}
-                      mm
+                      {weather.hourly.precipitation_probability?.[
+                        closestIndex
+                      ] ?? 0}
+                      %
                     </Text>
                   </Stack>
                 </Group>

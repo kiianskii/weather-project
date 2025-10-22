@@ -14,14 +14,17 @@ interface WeatherStore {
   weather: WeatherData | null;
   loading: boolean;
   error: string | null;
+  city: string | null;
   fetchWeatherData: (city: string) => Promise<void>;
   clearWeather: () => void;
+  setCity: (city: string | null) => void;
 }
 
 export const useWeatherStore = create<WeatherStore>((set) => ({
   weather: null,
   loading: false,
   error: null,
+  city: null,
 
   fetchWeatherData: async (city: string) => {
     try {
@@ -54,6 +57,6 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
       });
     }
   },
-
+  setCity: (city: string | null) => set({ city: city }),
   clearWeather: () => set({ weather: null, error: null }),
 }));

@@ -23,9 +23,11 @@ export const fetchWeather = async (lat: number, lon: number) => {
         "cloudcover",
         "precipitation_probability",
         "precipitation",
+        "surface_pressure", // 🆕 додано
       ].join(","),
       timezone: "auto",
     },
   });
+
   return response.data;
 };
