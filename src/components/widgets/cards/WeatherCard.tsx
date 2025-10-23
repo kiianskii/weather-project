@@ -19,9 +19,26 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
 
   if (!current_weather || !hourly) return null;
 
-  const index = hourly.time.indexOf(current_weather.time);
-  const humidity = hourly.relative_humidity_2m?.[index] ?? 0;
-  const pressure = hourly.surface_pressure?.[index] ?? 0;
+  const getClosestHourIndex = (times: string[], currentTime: string) => {
+    const target = new Date(currentTime).getTime();
+    let closestIndex = 0;
+    let smallestDiff = Infinity;
+
+    times.forEach((t, i) => {
+      const diff = Math.abs(new Date(t).getTime() - target);
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = i;
+      }
+    });
+
+    return closestIndex;
+  };
+
+  const closestIndex = getClosestHourIndex(
+    weather.hourly.time,
+    weather.current_weather.time
+  );
 
   let weatherType: "sunny" | "cloudy" | "rainy" = "sunny";
   if (current_weather.weathercode >= 3 && current_weather.weathercode < 60)
@@ -103,12 +120,21 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
 
           <Group gap={2}>
             <IconDroplet size={16} />
-            <Text size="sm">{humidity}%</Text>
+            <Text size="sm">
+              {" "}
+              {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
+            </Text>
           </Group>
 
           <Group gap={2}>
             <IconGauge size={16} />
-            <Text size="sm">{pressure} hPa</Text>
+            <Text size="sm">
+              {weather.hourly.surface_pressure?.[closestIndex]
+                ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
+                    0
+                  )} hPa`
+                : "—"}
+            </Text>
           </Group>
         </Group>
       </Stack>

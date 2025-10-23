@@ -28,11 +28,27 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
   const daily = weather?.daily;
   const city = weather?.city || "Unknown";
 
-  if (!current_weather || !hourly || !daily) return null;
+  const getClosestHourIndex = (times: string[], currentTime: string) => {
+    const target = new Date(currentTime).getTime();
+    let closestIndex = 0;
+    let smallestDiff = Infinity;
 
-  const index = hourly.time.indexOf(current_weather.time);
-  const humidity = hourly.relative_humidity_2m?.[index] ?? 0;
-  const pressure = hourly.surface_pressure?.[index] ?? 0;
+    times.forEach((t, i) => {
+      const diff = Math.abs(new Date(t).getTime() - target);
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = i;
+      }
+    });
+
+    return closestIndex;
+  };
+  const closestIndex = getClosestHourIndex(
+    weather.hourly.time,
+    weather.current_weather.time
+  );
+
+  if (!current_weather || !hourly || !daily) return null;
 
   let weatherType: "sunny" | "cloudy" | "rainy" | "stormy" = "sunny";
   if (current_weather.weathercode >= 3 && current_weather.weathercode < 60)
@@ -108,7 +124,6 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
         }}
       />
 
-      {/* Основна секція */}
       <Group
         justify="space-between"
         style={{
@@ -119,7 +134,6 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
           flexShrink: 0,
         }}
       >
-        {/* Ліва частина */}
         <Stack justify="center" gap="xs" style={{ paddingLeft: "1rem" }}>
           <Text size="lg" fw={700}>
             {city}
@@ -149,7 +163,6 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
           </Text>
         </Stack>
 
-        {/* Права частина */}
         <Stack
           justify="center"
           gap={6}
@@ -165,16 +178,23 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
           </Group>
           <Group gap={4} justify="flex-end">
             <IconDroplet size={14} />
-            <Text size="sm">{humidity}%</Text>
+            <Text size="sm">
+              {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
+            </Text>
           </Group>
           <Group gap={4} justify="flex-end">
             <IconGauge size={14} />
-            <Text size="sm">{pressure} hPa</Text>
+            <Text size="sm">
+              {weather.hourly.surface_pressure?.[closestIndex]
+                ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
+                    0
+                  )} hPa`
+                : "—"}
+            </Text>
           </Group>
         </Stack>
       </Group>
 
-      {/* Горизонтальна стрічка прогнозу на тиждень */}
       <ScrollArea
         type="never"
         style={{

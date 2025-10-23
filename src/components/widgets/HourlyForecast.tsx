@@ -62,7 +62,7 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
 
   const getIcon = (rain: number, rainProb: number, clouds: number) => {
     if (rain > 0.2 || rainProb > 50) return <IconCloudRain size={20} />;
-    if (clouds > 70) return <IconCloud size={20} />;
+    if (clouds > 75) return <IconCloud size={20} />;
     return <IconSun size={20} />;
   };
 

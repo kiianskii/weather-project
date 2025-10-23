@@ -25,17 +25,13 @@ const Header = () => {
   };
 
   return (
-    <Group justify="space-between" px="md" h="100%" align="center">
+    <Group justify="space-between" px="lg" h="100%" align="center">
       <Text fw={700} size="lg" style={{ letterSpacing: "-0.02em" }}>
         Weatherly ☀️
       </Text>
 
       <Group gap="sm">
         <SearchBar />
-
-        <ActionIcon variant="light" radius="xl" aria-label="Change language">
-          <IconLanguage size={18} />
-        </ActionIcon>
 
         <Switch
           checked={checked}
