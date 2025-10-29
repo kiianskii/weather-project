@@ -13,12 +13,15 @@ import {
 import { IconSearch, IconX, IconPencil } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useWeatherStore } from "../../store/weatherStore";
+import { InfoTooltip } from "../../shared/components/InfoTooltip";
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   const { city, setCity } = useWeatherStore();
+
+  const label = "Search works with English names only.";
 
   const handleSearch = () => {
     const trimmed = query.trim();
@@ -100,6 +103,7 @@ const SearchBar = () => {
     <Transition mounted={editing || !city} transition="fade" duration={200}>
       {(styles) => (
         <Flex style={{ ...styles, maxWidth: "100%" }} align="center" gap={6}>
+          <InfoTooltip size={20} label={label} />
           <TextInput
             value={query}
             onChange={(e) => setQuery(e.currentTarget.value)}

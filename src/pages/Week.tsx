@@ -1,4 +1,4 @@
-import WeeklyForecast from "../components/widgets/WeeklyForecast";
+import WeeklyForecast from "../components/widgets/CityWeatherWidgets/WeeklyForecast";
 import { Stack, Text } from "@mantine/core";
 import { useWeatherStore } from "../store/weatherStore";
 

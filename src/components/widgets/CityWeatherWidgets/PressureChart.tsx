@@ -22,7 +22,6 @@ const PressureChart = ({ hourly }: PressureChartProps) => {
 
   if (!hourly?.time?.length || !hourly.surface_pressure?.length) return null;
 
-  // Формуємо дані тільки для сьогоднішнього дня
   const today = new Date().getDate();
   const data = hourly.time
     .map((time, index) => ({

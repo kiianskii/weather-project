@@ -8,13 +8,13 @@ import {
   Box,
 } from "@mantine/core";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  ReferenceDot,
+  Cell,
 } from "recharts";
 import { IconArrowUp } from "@tabler/icons-react";
 
@@ -23,7 +23,7 @@ interface WindOverviewProps {
 }
 
 interface WindDataPoint {
-  hour: string; // "08:00"
+  hour: string;
   speed: number;
   direction: number;
 }
@@ -43,28 +43,28 @@ const CustomTooltip = ({
   payload?: any[];
   label?: string;
 }) => {
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
   if (active && payload && payload.length > 0) {
     const entry = payload[0].payload as WindDataPoint;
     return (
       <Box
         p={8}
         style={{
-          background: "rgba(0,0,0,0.75)",
-          color: "#fff",
-          borderRadius: 8,
-          fontSize: 12,
-          minWidth: 100,
+          background: isDark ? "rgba(40,40,50,0.9)" : "rgba(255,255,255,0.95)",
+          borderRadius: "8px",
+          border: "1px solid rgba(0,0,0,0.1)",
         }}
       >
         <Text fw={600}>{label}</Text>
         <Text>Speed: {entry.speed.toFixed(1)} km/h</Text>
         <Group gap={4}>
-          <Text>Direction: {getWindDirectionLabel(entry.direction)}</Text>
+          <Text>Dir: {getWindDirectionLabel(entry.direction)}</Text>
           <IconArrowUp
-            size={12}
+            size={20}
             style={{
               transform: `rotate(${entry.direction}deg)`,
-              color: "#74c0fc",
+              color: "#b197fc",
             }}
           />
         </Group>
@@ -78,12 +78,10 @@ const WindOverview: React.FC<WindOverviewProps> = ({ weather }) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
 
-  // Формуємо дані по цілих годинах
   const data: WindDataPoint[] = [];
   (weather?.hourly?.time ?? []).forEach((t: string, i: number) => {
     const date = new Date(t);
     const hourStr = `${date.getHours()}:00`;
-    // Перевіряємо, чи вже є така година
     if (!data.some((d) => d.hour === hourStr)) {
       data.push({
         hour: hourStr,
@@ -110,16 +108,16 @@ const WindOverview: React.FC<WindOverviewProps> = ({ weather }) => {
       <Stack gap="xs">
         <Group justify="space-between">
           <Text fw={600} size="sm">
-            Wind Overview (24h)
+            Wind Flow (24h)
           </Text>
           <Text size="xs" c="dimmed">
-            Speed & direction per hour
+            Speed & direction
           </Text>
         </Group>
 
-        <Box style={{ width: "100%", height: 250 }}>
+        <Box style={{ width: "100%", height: 260, position: "relative" }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
+            <BarChart data={data} margin={{ top: 10, bottom: 40 }}>
               <XAxis
                 dataKey="hour"
                 tick={{ fontSize: 10, fill: isDark ? "#ddd" : "#333" }}
@@ -135,15 +133,22 @@ const WindOverview: React.FC<WindOverviewProps> = ({ weather }) => {
               />
               <Tooltip content={<CustomTooltip />} />
 
-              <Line
-                type="monotone"
+              <Bar
                 dataKey="speed"
-                stroke={isDark ? "#74c0fc" : "#1c7ed6"}
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 4 }}
-              />
-            </LineChart>
+                radius={[6, 6, 0, 0]}
+                animationDuration={700}
+                animationBegin={200}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={`hsl(${270 + entry.speed}, 70%, ${
+                      isDark ? "65%" : "55%"
+                    })`}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
         </Box>
       </Stack>

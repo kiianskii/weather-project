@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { Stack, Text, Flex } from "@mantine/core";
 import WeatherCard from "../components/widgets/cards/WeatherCard";
-import HourlyForecast from "../components/widgets/HourlyForecast";
-import WeeklyForecast from "../components/widgets/WeeklyForecast";
+import HourlyForecast from "../components/widgets/CityWeatherWidgets/HourlyForecast";
+import WeeklyForecast from "../components/widgets/CityWeatherWidgets/WeeklyForecast";
 
 import { useWeatherStore } from "../store/weatherStore";
 import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
-import PressureChart from "../components/widgets/PressureChart";
-import ShortCards from "../components/widgets/ShortCards";
-import WindOverview from "../components/widgets/WindOverview";
+import PressureChart from "../components/widgets/CityWeatherWidgets/PressureChart";
+
+import WindOverview from "../components/widgets/CityWeatherWidgets/WindOverview";
+import ShortCards from "../components/widgets/CityWeatherWidgets/ShortCards";
 
 const CityWeather = () => {
   const { weather, loading, error, fetchWeatherData, city } = useWeatherStore();
