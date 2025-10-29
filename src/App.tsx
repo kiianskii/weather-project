@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
 import HomePage from "./pages/HomePage";
 import CityWeather from "./pages/CityWeather";
+import WeatherHistoryPage from "./pages/WeatherHistoryPage";
 
 const theme = createTheme({
   fontFamily: "Inter, sans-serif",
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/city" element={<CityWeather />} />
+            <Route path="/history" element={<WeatherHistoryPage />} />
           </Routes>
         </AppLayout>
       </BrowserRouter>

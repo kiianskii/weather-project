@@ -12,9 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@mantine/core": "^8.3.3",
-    "@mantine/hooks": "^8.3.3",
-    "@mantine/notifications": "^8.3.3",
+    "@mantine/core": "^8.3.6",
+    "@mantine/dates": "^8.3.6",
+    "@mantine/hooks": "^8.3.6",
+    "@mantine/notifications": "^8.3.6",
     "@tabler/icons-react": "^3.35.0",
     "@types/react-leaflet": "^2.8.3",
     "axios": "^1.12.2",

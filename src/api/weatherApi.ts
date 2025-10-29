@@ -33,3 +33,30 @@ export const fetchWeather = async (lat: number, lon: number) => {
 
   return response.data;
 };
+
+export async function fetchHistoricalWeather(
+  latitude: number,
+  longitude: number,
+  startDate: string,
+  endDate: string
+) {
+  const response = await axios.get(
+    "https://archive-api.open-meteo.com/v1/archive",
+    {
+      params: {
+        latitude,
+        longitude,
+        start_date: startDate,
+        end_date: endDate,
+        daily: [
+          "temperature_2m_max",
+          "temperature_2m_min",
+          "precipitation_sum",
+        ],
+        timezone: "auto",
+      },
+    }
+  );
+
+  return response.data;
+}
