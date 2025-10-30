@@ -5,13 +5,12 @@ import HomePage from "./pages/HomePage";
 import CityWeather from "./pages/CityWeather";
 import WeatherHistoryPage from "./pages/WeatherHistoryPage";
 
-const theme = createTheme({
-  fontFamily: "Inter, sans-serif",
-  defaultRadius: "md",
-  primaryColor: "violet",
-});
-
 function App() {
+  const theme = createTheme({
+    fontFamily: "Inter, sans-serif",
+    defaultRadius: "md",
+    primaryColor: "grape",
+  });
   return (
     <MantineProvider theme={theme} defaultColorScheme="light">
       <BrowserRouter>

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import { fetchWeather, fetchHistoricalWeather } from "../api/weatherApi";
+import type { DatesRangeValue } from "@mantine/dates";
 
 interface WeatherData {
   city?: string;
@@ -13,6 +14,7 @@ interface WeatherData {
 interface WeatherStore {
   weather: WeatherData | null;
   history: any | null;
+  dateRange: DatesRangeValue;
   loading: boolean;
   error: string | null;
   city: string | null;
@@ -25,6 +27,7 @@ interface WeatherStore {
   clearWeather: () => void;
   clearHistory: () => void;
   setCity: (city: string | null) => void;
+  setDateRange: (cred: DatesRangeValue) => void;
 }
 
 export const useWeatherStore = create<WeatherStore>((set) => ({
@@ -33,6 +36,7 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   loading: false,
   error: null,
   city: null,
+  dateRange: [null, null],
 
   fetchWeatherData: async (city: string) => {
     try {
@@ -97,4 +101,5 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   setCity: (city: string | null) => set({ city }),
   clearWeather: () => set({ weather: null, error: null }),
   clearHistory: () => set({ history: null, error: null }),
+  setDateRange: (cred: DatesRangeValue) => set({ dateRange: cred }),
 }));

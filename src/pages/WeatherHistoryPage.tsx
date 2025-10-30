@@ -3,6 +3,7 @@ import { Container, Stack, Title, Text, Card, Divider } from "@mantine/core";
 import { useWeatherStore } from "../store/weatherStore";
 import { WeatherHistoryForm } from "../components/widgets/WeatherHistory/WeatherHistoryForm";
 import { WeatherHistoryView } from "../components/widgets/WeatherHistory/WeatherHistoryView";
+import { WeatherTrendsDashboard } from "../components/widgets/WeatherHistory/WeatherTrends";
 
 export default function WeatherHistoryPage() {
   const {
@@ -41,7 +42,7 @@ export default function WeatherHistoryPage() {
     storedCity && dateRange[0] !== null && dateRange[1] !== null && !loading;
 
   return (
-    <Container size="md" py="xl">
+    <Container py="xl" maw="100%">
       <Stack gap="md">
         <Title order={2}>Weather History</Title>
         <Text c="dimmed" size="sm">
@@ -79,6 +80,7 @@ export default function WeatherHistoryPage() {
         >
           <WeatherHistoryView />
         </Card>
+        <WeatherTrendsDashboard />
       </Stack>
     </Container>
   );

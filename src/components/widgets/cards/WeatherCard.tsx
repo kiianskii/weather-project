@@ -120,21 +120,17 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
 
           <Group gap={2}>
             <IconDroplet size={16} />
-            <Text size="sm">
-              {" "}
-              {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
-            </Text>
+            <Text size="sm">  {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
+ </Text>
           </Group>
 
           <Group gap={2}>
             <IconGauge size={16} />
-            <Text size="sm">
-              {weather.hourly.surface_pressure?.[closestIndex]
+            <Text size="sm">{weather.hourly.surface_pressure?.[closestIndex]
                 ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
                     0
                   )} hPa`
-                : "—"}
-            </Text>
+                : "—"}</Text>
           </Group>
         </Group>
       </Stack>

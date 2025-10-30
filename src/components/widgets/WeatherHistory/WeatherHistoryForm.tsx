@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, TextInput, Box } from "@mantine/core";
-import { DatePickerInput, type DatesRangeValue } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { IconCalendar, IconSearch } from "@tabler/icons-react";
 import { useWeatherStore } from "../../../store/weatherStore";
 
@@ -9,9 +9,8 @@ interface WeatherHistoryFormProps {
 }
 
 export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
-  const { city: storedCity } = useWeatherStore();
+  const { city: storedCity, dateRange, setDateRange } = useWeatherStore();
   const [city, setCity] = useState(storedCity || "");
-  const [dateRange, setDateRange] = useState<DatesRangeValue>([null, null]);
 
   const handleSubmit = () => {
     if (!city || !dateRange?.[0] || !dateRange?.[1]) return;
@@ -60,7 +59,7 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
 
       <Button
         onClick={handleSubmit}
-        variant="filled"
+        variant="light"
         style={{ width: 140, minWidth: 140 }}
       >
         Show history

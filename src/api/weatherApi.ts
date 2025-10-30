@@ -51,7 +51,13 @@ export async function fetchHistoricalWeather(
         daily: [
           "temperature_2m_max",
           "temperature_2m_min",
+          "temperature_2m_mean",
           "precipitation_sum",
+          "sunshine_duration",
+          "windspeed_10m_max",
+          "windgusts_10m_max",
+          "shortwave_radiation_sum",
+          "precipitation_hours",
         ],
         timezone: "auto",
       },

@@ -1,12 +1,6 @@
-import {
-  Group,
-  Text,
-  ActionIcon,
-  useMantineColorScheme,
-  Switch,
-} from "@mantine/core";
+import { Group, Text, useMantineColorScheme, Switch } from "@mantine/core";
 import SearchBar from "../widgets/SearchBar";
-import { IconSun, IconMoonStars, IconLanguage } from "@tabler/icons-react";
+import { IconSun, IconMoonStars } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 const Header = () => {
