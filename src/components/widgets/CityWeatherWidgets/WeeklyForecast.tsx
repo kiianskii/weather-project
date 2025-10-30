@@ -5,7 +5,6 @@ import {
   Group,
   ScrollArea,
   Tooltip,
-  useMantineTheme,
   useMantineColorScheme,
 } from "@mantine/core";
 import {

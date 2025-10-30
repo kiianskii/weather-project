@@ -8,9 +8,7 @@ import {
   Group,
   Box,
   Spoiler,
-  Button,
   useMantineColorScheme,
-  Badge,
 } from "@mantine/core";
 import { useWeatherStore } from "../../../store/weatherStore";
 import { IconSun, IconCloud, IconCloudRain } from "@tabler/icons-react";
