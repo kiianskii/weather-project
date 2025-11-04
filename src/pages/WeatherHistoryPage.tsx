@@ -1,47 +1,97 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Stack,
   Title,
   Text,
   Card,
-  Divider,
   useMantineColorScheme,
+  Center,
+  Loader,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconAlertCircle } from "@tabler/icons-react";
+
 import { useWeatherStore } from "../store/weatherStore";
 import { WeatherHistoryForm } from "../components/widgets/WeatherHistory/WeatherHistoryForm";
 import { WeatherHistoryView } from "../components/widgets/WeatherHistory/WeatherHistoryView";
 import { WeatherTrendsDashboard } from "../components/widgets/WeatherHistory/WeatherTrends";
+import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
 
 export default function WeatherHistoryPage() {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
 
-  const { setCity, fetchHistoricalWeatherData } = useWeatherStore();
+  const {
+    setHistoryCity,
+    fetchHistoricalWeatherData,
+    history,
+    historyError,
+    clearHistoryError,
+  } = useWeatherStore();
 
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (
     city: string,
     startDate: string,
     endDate: string
   ) => {
+    setLoading(true);
     try {
-      setError(null);
-      setCity(city);
+      setHistoryCity(city);
       await fetchHistoricalWeatherData(city, startDate, endDate);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch historical weather");
+    } catch (err) {
+      console.error(err);
     } finally {
+      setLoading(false);
     }
   };
 
-  // Спільний стиль для Card з адаптацією під теми
+  useEffect(() => {
+    if (historyError) {
+      notifications.show({
+        id: "history-error",
+        title: "Historical weather request failed",
+        color: "red",
+        icon: <IconAlertCircle size={20} />,
+        message:
+          historyError === "City not found" ? (
+            <div style={{ lineHeight: 1.5 }}>
+              <span>
+                No matching results. Try another spelling or date range and
+                check for <strong>typos</strong>.
+              </span>
+              <br />
+              <span>
+                Make sure the city name is written in{" "}
+                <strong>English letters</strong>.
+              </span>
+            </div>
+          ) : (
+            historyError
+          ),
+        autoClose: 5000,
+        radius: "md",
+        withBorder: true,
+        style: {
+          maxWidth: 420,
+          whiteSpace: "normal",
+          lineHeight: 1.5,
+        },
+      });
+
+      // очищення після показу
+      clearHistoryError();
+    }
+  }, [historyError, clearHistoryError]);
+
   const cardStyle = {
-    background: isDark ? "rgba(30,30,30,0.6)" : "rgba(255, 255, 255, 0.05)",
     border: isDark
-      ? "1px solid rgba(255,255,255,0.1)"
-      : "1px solid rgba(0, 0, 0, 0.15)",
+      ? "1px solid rgba(140, 140, 140, 0.69)"
+      : "1px solid rgba(0, 0, 0, 0.1)",
+    background: isDark ? "rgba(255,255,255,0.03)" : "#fff",
+    transition: "background 0.3s ease, border 0.3s ease, transform 0.2s ease",
   };
 
   return (
@@ -56,21 +106,26 @@ export default function WeatherHistoryPage() {
           <WeatherHistoryForm onSubmit={handleSubmit} />
         </Card>
 
-        {/* <Divider my="md" /> */}
+        {history ? (
+          <>
+            <Card my="sm" withBorder radius="md" p="md" style={cardStyle}>
+              <WeatherHistoryView />
+            </Card>
 
-        {error && (
-          <Text c="red" ta="center">
-            {error}
-          </Text>
+            <Card my="sm" withBorder radius="md" p="md" style={cardStyle}>
+              <WeatherTrendsDashboard />
+            </Card>
+          </>
+        ) : loading ? (
+          <Center h="40vh">
+            <Loader size="xl" />
+          </Center>
+        ) : (
+          <WeatherPlaceholder
+            title="No data yet"
+            description="Please select a city and date range to begin exploring historical weather data."
+          />
         )}
-
-        <Card my="sm" withBorder radius="md" p="md" style={cardStyle}>
-          <WeatherHistoryView />
-        </Card>
-
-        <Card my="sm" withBorder radius="md" p="md" style={cardStyle}>
-          <WeatherTrendsDashboard />
-        </Card>
       </Stack>
     </Container>
   );

@@ -15,7 +15,7 @@ import { IconSun, IconCloud, IconCloudRain } from "@tabler/icons-react";
 import { useRef, useState, useEffect } from "react";
 
 export function WeatherHistoryView() {
-  const { history, loading, city } = useWeatherStore();
+  const { history, loadingHistory, historyCity } = useWeatherStore();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
 
@@ -31,7 +31,7 @@ export function WeatherHistoryView() {
     }
   }, [history]);
 
-  if (loading) {
+  if (loadingHistory) {
     return (
       <Center style={{ minHeight: 200 }}>
         <Loader size="lg" />
@@ -42,7 +42,7 @@ export function WeatherHistoryView() {
   if (!history?.daily?.time?.length) {
     return (
       <Text c="dimmed" ta="center" mt="md">
-        {city
+        {historyCity
           ? "No historical data available for the selected dates."
           : "Please select a city and date range."}
       </Text>
@@ -54,7 +54,9 @@ export function WeatherHistoryView() {
   return (
     <Stack gap="lg">
       <Text fw={600} size="lg" ta="center">
-        {city ? `Historical Weather for ${city}` : "Historical Weather"}
+        {historyCity
+          ? `Historical Weather for ${historyCity}`
+          : "Historical Weather"}
       </Text>
 
       <Spoiler
@@ -88,10 +90,12 @@ export function WeatherHistoryView() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
+                    background: isDark
+                      ? "rgba(30,30,30,0.6)"
+                      : "rgba(255,255,255,0.05)",
                     border: isDark
-                      ? "1px solid rgba(140, 140, 140, 0.69)"
-                      : "1px solid rgba(0, 0, 0, 0.1)",
-                    background: isDark ? "rgba(255,255,255,0.03)" : "#fff",
+                      ? "1px solid rgba(255,255,255,0.1)"
+                      : "1px solid rgba(0,0,0,0.15)",
                   }}
                 >
                   <Stack align="center" gap="sm">

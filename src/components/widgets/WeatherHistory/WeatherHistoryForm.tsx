@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button, TextInput, Box } from "@mantine/core";
+import { Button, TextInput, Box, Group } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { IconCalendar, IconSearch } from "@tabler/icons-react";
+import { IconCalendar, IconSearch, IconX } from "@tabler/icons-react";
 import { useWeatherStore } from "../../../store/weatherStore";
 
 interface WeatherHistoryFormProps {
@@ -9,8 +9,10 @@ interface WeatherHistoryFormProps {
 }
 
 export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
-  const { city: storedCity, dateRange, setDateRange } = useWeatherStore();
-  const [city, setCity] = useState(storedCity || "");
+  const { historyCity, dateRange, setDateRange, setHistoryCity, clearHistory } =
+    useWeatherStore();
+
+  const [city, setCity] = useState(historyCity || "");
 
   const handleSubmit = () => {
     if (!city || !dateRange?.[0] || !dateRange?.[1]) return;
@@ -24,6 +26,14 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
     const endDate = formatDate(dateRange[1]);
 
     onSubmit(city, startDate, endDate);
+    setHistoryCity(city);
+  };
+
+  const handleClear = () => {
+    setCity("");
+    setDateRange([null, null]);
+    setHistoryCity(null);
+    clearHistory();
   };
 
   return (
@@ -32,7 +42,7 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
         display: "flex",
         gap: 12,
         alignItems: "flex-end",
-        maxWidth: 650,
+        maxWidth: 750,
         flexWrap: "nowrap",
       }}
     >
@@ -47,7 +57,7 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
 
       <DatePickerInput
         type="range"
-        label="Select date range"
+        label="Start date / End date"
         value={dateRange}
         onChange={setDateRange}
         valueFormat="YYYY MMM DD"
@@ -55,15 +65,30 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
         clearable
         leftSection={<IconCalendar />}
         style={{ width: 260, minWidth: 260 }}
+        maxDate={new Date()}
+        placeholder="Pick daterange"
       />
 
-      <Button
-        onClick={handleSubmit}
-        variant="light"
-        style={{ width: 140, minWidth: 140 }}
-      >
-        Show history
-      </Button>
+      <Group gap="xs" align="end">
+        <Button
+          onClick={handleSubmit}
+          variant="light"
+          style={{ width: 140, minWidth: 140 }}
+        >
+          Show history
+        </Button>
+
+        <Button
+          onClick={handleClear}
+          variant="light"
+          color="gray"
+          leftSection={<IconX size={16} />}
+          style={{ width: 100, minWidth: 100 }}
+          disabled={!city && !dateRange[0]}
+        >
+          Clear
+        </Button>
+      </Group>
     </Box>
   );
 }

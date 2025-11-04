@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Stack, Text, Flex } from "@mantine/core";
+import { Stack, Text, Flex, Loader } from "@mantine/core";
 import WeatherCard from "../components/widgets/cards/WeatherCard";
 import HourlyForecast from "../components/widgets/CityWeatherWidgets/HourlyForecast";
 import WeeklyForecast from "../components/widgets/CityWeatherWidgets/WeeklyForecast";
@@ -12,34 +12,32 @@ import WindOverview from "../components/widgets/CityWeatherWidgets/WindOverview"
 import ShortCards from "../components/widgets/CityWeatherWidgets/ShortCards";
 
 const CityWeather = () => {
-  const { weather, loading, error, fetchWeatherData, city } = useWeatherStore();
+  const { weather, loadingWeather, city } = useWeatherStore();
 
-  useEffect(() => {
-    if (city) {
-      fetchWeatherData(city);
-    }
-  }, [city, fetchWeatherData]);
-
-  if (!city) {
+  if (!city || !weather) {
     return (
       <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
-        <WeatherPlaceholder />
+        <WeatherPlaceholder
+          title="Weather Forecast"
+          description="Enter a city name in the search bar above to see detailed weather information."
+        />
       </Stack>
     );
   }
 
-  if (!weather) return null;
-
   return (
     <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
-      {loading && <Text ta="center">Loading...</Text>}
-      {error && (
-        <Text c="red" ta="center">
-          {error}
-        </Text>
+      {loadingWeather && (
+        <Flex
+          justify="center"
+          align="center"
+          style={{ height: "80vh", width: "100%" }}
+        >
+          <Loader size="lg" />
+        </Flex>
       )}
 
-      {!loading && (
+      {!loadingWeather && (
         <>
           <Flex align="flex-start" gap="xl" style={{ width: "100%" }}>
             <WeatherCard weather={weather} />

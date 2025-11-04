@@ -35,9 +35,9 @@ interface WeatherHistory {
 }
 
 export function WeatherTrendsDashboard() {
-  const { history, city } = useWeatherStore() as {
+  const { history, historyCity } = useWeatherStore() as {
     history: WeatherHistory | null;
-    city?: string;
+    historyCity?: string;
   };
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
@@ -75,24 +75,23 @@ export function WeatherTrendsDashboard() {
         : 0,
   }));
 
-  // кольори залежно від теми
   const axisColor = isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.7)";
   const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
   const tooltipBg = isDark ? "rgba(30,30,30,0.8)" : "#fff";
   const tooltipLabel = isDark ? "#fff" : "#000";
 
   const cardStyle = {
-    background: isDark ? "rgba(255,255,255,0.04)" : "#fff",
+    backdropFilter: "blur(4px)",
+    background: isDark ? "rgba(30,30,30,0.6)" : "rgba(255,255,255,0.05)",
     border: isDark
       ? "1px solid rgba(255,255,255,0.1)"
-      : "1px solid rgba(0,0,0,0.1)",
-    backdropFilter: "blur(4px)",
+      : "1px solid rgba(0,0,0,0.15)",
   };
 
   return (
     <Stack gap="lg">
       <Text fw={600} size="lg" ta="center">
-        {city ? `Weather Trends for ${city}` : "Weather Trends"}
+        {historyCity ? `Weather Trends for ${historyCity}` : "Weather Trends"}
       </Text>
 
       <SegmentedControl
@@ -104,7 +103,7 @@ export function WeatherTrendsDashboard() {
           { label: "Sunshine", value: "sunshine" },
         ]}
         fullWidth
-        radius="lg"
+        radius="xl"
       />
 
       <Card withBorder radius="lg" p="lg" style={cardStyle}>

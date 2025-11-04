@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   TextInput,
   ActionIcon,
@@ -10,7 +10,13 @@ import {
   Box,
   useMantineColorScheme,
 } from "@mantine/core";
-import { IconSearch, IconX, IconPencil } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconX,
+  IconPencil,
+  IconAlertCircle,
+} from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import { useWeatherStore } from "../../store/weatherStore";
 import { InfoTooltip } from "../../shared/components/InfoTooltip";
@@ -19,24 +25,76 @@ const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
-  const { city, setCity } = useWeatherStore();
+  const { city, setCity, fetchWeatherData, weatherError, clearWeatherError } =
+    useWeatherStore();
 
-  const label = "Search works with English names only.";
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const trimmed = query.trim();
     if (trimmed) {
-      setCity(trimmed);
-      navigate(`/city`);
-      setQuery("");
-      setEditing(false);
+      try {
+        await fetchWeatherData(trimmed);
+        navigate(`/city`);
+        setQuery("");
+        setEditing(false);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
   const handleClear = () => setQuery("");
 
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === "dark";
+  useEffect(() => {
+    if (weatherError) {
+      notifications.clean();
+      notifications.show({
+        id: "weather-error",
+        color: "red",
+        title: "Weather request failed",
+        icon: <IconAlertCircle size={20} />,
+        autoClose: 8000,
+        withCloseButton: true,
+        message:
+          weatherError === "City not found" ? (
+            <div style={{ lineHeight: 1.5 }}>
+              <span>
+                No results found. Please check for <strong>typos</strong> or try
+                a different <strong>spelling</strong>.
+              </span>
+              <br />
+              <span>
+                Ensure the city name is written in{" "}
+                <strong>English letters</strong>.
+              </span>
+            </div>
+          ) : (
+            weatherError
+          ),
+        styles: (theme) => ({
+          root: {
+            maxWidth: 440,
+            padding: "16px 18px",
+            borderRadius: theme.radius.md,
+            backgroundColor:
+              colorScheme === "dark"
+                ? theme.colors.dark[7]
+                : theme.colors.red[0],
+            border: `1px solid ${
+              colorScheme === "dark" ? theme.colors.red[7] : theme.colors.red[4]
+            }`,
+          },
+          title: { fontWeight: 700, marginBottom: 6 },
+          description: { fontSize: theme.fontSizes.sm },
+          icon: { marginTop: 4 },
+        }),
+      });
+
+      clearWeatherError();
+    }
+  }, [weatherError, clearWeatherError]);
 
   if (city && !editing) {
     return (
@@ -99,11 +157,15 @@ const SearchBar = () => {
     );
   }
 
+  // 🔍 Поле пошуку
   return (
     <Transition mounted={editing || !city} transition="fade" duration={200}>
       {(styles) => (
         <Flex style={{ ...styles, maxWidth: "100%" }} align="center" gap={6}>
-          <InfoTooltip size={20} label={label} />
+          <InfoTooltip
+            size={20}
+            label="Search works with English names only."
+          />
           <TextInput
             value={query}
             onChange={(e) => setQuery(e.currentTarget.value)}

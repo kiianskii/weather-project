@@ -14,33 +14,54 @@ interface WeatherData {
 interface WeatherStore {
   weather: WeatherData | null;
   history: any | null;
-  dateRange: DatesRangeValue;
-  loading: boolean;
-  error: string | null;
+  loadingWeather: boolean;
+  loadingHistory: boolean;
+
+  weatherError: string | null;
+  historyError: string | null;
+
   city: string | null;
+  historyCity: string | null;
+  dateRange: DatesRangeValue;
+
   fetchWeatherData: (city: string) => Promise<void>;
   fetchHistoricalWeatherData: (
     city: string,
     start: string,
     end: string
   ) => Promise<void>;
+
   clearWeather: () => void;
   clearHistory: () => void;
   setCity: (city: string | null) => void;
+  setHistoryCity: (city: string | null) => void;
   setDateRange: (cred: DatesRangeValue) => void;
+  clearWeatherError: () => void;
+  clearHistoryError: () => void;
 }
 
 export const useWeatherStore = create<WeatherStore>((set) => ({
   weather: null,
   history: null,
-  loading: false,
-  error: null,
+
+  loadingWeather: false,
+  loadingHistory: false,
+
+  weatherError: null,
+  historyError: null,
+
   city: null,
+  historyCity: null,
   dateRange: [null, null],
 
   fetchWeatherData: async (city: string) => {
     try {
-      set({ loading: true, error: null });
+      set({
+        loadingWeather: true,
+        weatherError: null,
+        weather: null,
+        city: null,
+      });
 
       const geo = await axios.get(
         "https://geocoding-api.open-meteo.com/v1/search",
@@ -55,19 +76,25 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
 
       set({
         weather: { ...data, city: location.name },
-        loading: false,
+        loadingWeather: false,
+        city: location.name,
       });
     } catch (err: any) {
       set({
-        error: err.message || "Failed to fetch weather data",
-        loading: false,
+        weatherError: err.message || "Failed to fetch weather data",
+        loadingWeather: false,
       });
     }
   },
 
   fetchHistoricalWeatherData: async (city, startDate, endDate) => {
     try {
-      set({ loading: true, error: null });
+      set({
+        loadingHistory: true,
+        historyError: null,
+        history: null,
+        historyCity: null,
+      });
 
       const geo = await axios.get(
         "https://geocoding-api.open-meteo.com/v1/search",
@@ -86,20 +113,38 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
       );
 
       set({
-        history: historyData, // окремо
-        loading: false,
-        city: location.name,
+        history: historyData,
+        loadingHistory: false,
+        historyCity: location.name,
       });
     } catch (err: any) {
       set({
-        error: err.message || "Failed to fetch historical data",
-        loading: false,
+        historyError: err.message || "Failed to fetch historical data",
+        loadingHistory: false,
       });
     }
   },
 
   setCity: (city: string | null) => set({ city }),
-  clearWeather: () => set({ weather: null, error: null }),
-  clearHistory: () => set({ history: null, error: null }),
+  setHistoryCity: (city: string | null) => set({ historyCity: city }),
   setDateRange: (cred: DatesRangeValue) => set({ dateRange: cred }),
+
+  clearWeather: () =>
+    set({
+      weather: null,
+      weatherError: null,
+      city: null,
+      loadingWeather: false,
+    }),
+  clearWeatherError: () => set({ weatherError: null }),
+  clearHistoryError: () => set({ weatherError: null }),
+
+  clearHistory: () =>
+    set({
+      history: null,
+      historyError: null,
+      historyCity: null,
+      dateRange: [null, null],
+      loadingHistory: false,
+    }),
 }));
