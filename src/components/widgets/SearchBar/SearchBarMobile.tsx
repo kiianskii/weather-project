@@ -1,0 +1,81 @@
+import { useState } from "react";
+import {
+  Dialog,
+  Text,
+  Button,
+  Box,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { IconMapPin, IconChevronDown } from "@tabler/icons-react";
+import SearchBarEditMode from "../SearchBar/SearchBarEditMode";
+import { useWeatherStore } from "../../../store/weatherStore";
+
+const SearchBarMobile = () => {
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+  const { city, fetchWeatherData } = useWeatherStore();
+
+  const [opened, setOpened] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const handleSearch = async () => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    try {
+      await fetchWeatherData(trimmed);
+      setOpened(false);
+      setQuery("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <Box>
+      <Button
+        variant="subtle"
+        size="compact-sm"
+        onClick={() => setOpened(true)}
+        leftSection={<IconMapPin size={16} />}
+        rightSection={<IconChevronDown size={14} />}
+        style={{
+          fontWeight: 600,
+          textTransform: "capitalize",
+          color: isDark ? "#fff" : "#333",
+        }}
+      >
+        {city || "Choose city"}
+      </Button>
+
+      <Dialog
+        opened={opened}
+        withCloseButton
+        onClose={() => setOpened(false)}
+        radius="md"
+        p="md"
+        style={{
+          maxWidth: 280,
+
+          marginInline: "auto",
+          background: isDark ? "rgba(30,30,30,0.95)" : "#fff",
+          boxShadow:
+            "0 4px 20px rgba(0,0,0,0.25), 0 0 1px rgba(255,255,255,0.15)",
+        }}
+        position={{ top: 50, right: 10 }}
+      >
+        <Text fw={600} mb="sm" size="sm" ta="center">
+          {city ? "Search for another city" : "Search for a city"}
+        </Text>
+
+        <SearchBarEditMode
+          query={query}
+          onQueryChange={setQuery}
+          onSearch={handleSearch}
+          onCancel={() => setOpened(false)}
+        />
+      </Dialog>
+    </Box>
+  );
+};
+
+export default SearchBarMobile;

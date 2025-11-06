@@ -1,13 +1,28 @@
-import { Group, Text, useMantineColorScheme, Switch } from "@mantine/core";
-import SearchBar from "../widgets/SearchBar";
-import { IconSun, IconMoonStars } from "@tabler/icons-react";
+import {
+  Group,
+  Text,
+  useMantineColorScheme,
+  Switch,
+  ActionIcon,
+  Drawer,
+  Box,
+} from "@mantine/core";
+import SearchBar from "../widgets/SearchBar/SearchBar";
+import { IconSun, IconMoonStars, IconMenu2 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "@mantine/hooks";
+import Sidebar from "./Sidebar";
+import SearchBarMobile from "../widgets/SearchBar/SearchBarMobile";
 
 const Header = () => {
+  const mobile = useMediaQuery("(max-width: 767px)");
+
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
 
   const [checked, setChecked] = useState(isDark);
+  const [drawerOpened, setDrawerOpened] = useState(false);
+
   useEffect(() => {
     setChecked(isDark);
   }, [isDark]);
@@ -20,34 +35,111 @@ const Header = () => {
 
   return (
     <Group justify="space-between" px="lg" h="100%" align="center">
-      <Text fw={700} size="lg" style={{ letterSpacing: "-0.02em" }}>
-        Weatherly ☀️
-      </Text>
-
-      <Group gap="sm">
-        <SearchBar />
-
-        <Switch
-          checked={checked}
-          onChange={handleSwitchChange}
-          size="md"
-          color="dark.4"
-          onLabel={
-            <IconSun
-              size={16}
-              stroke={2.5}
-              color="var(--mantine-color-yellow-4)"
-            />
-          }
-          offLabel={
-            <IconMoonStars
-              size={16}
-              stroke={2.5}
-              color="var(--mantine-color-blue-6)"
-            />
-          }
-        />
+      <Group align="center" gap="xs">
+        {mobile && (
+          <ActionIcon
+            size="lg"
+            variant="subtle"
+            onClick={() => setDrawerOpened(true)}
+            aria-label="Open menu"
+          >
+            <IconMenu2 size={22} />
+          </ActionIcon>
+        )}
+        <Text fw={700} size="lg" style={{ letterSpacing: "-0.02em" }}>
+          Weatherly ☀️
+        </Text>
       </Group>
+      {mobile && <SearchBarMobile />}
+
+      {!mobile && (
+        <Group gap="sm">
+          <SearchBar />
+          <Switch
+            checked={checked}
+            onChange={handleSwitchChange}
+            size="md"
+            color="dark.4"
+            onLabel={
+              <IconSun
+                size={16}
+                stroke={2.5}
+                color="var(--mantine-color-yellow-4)"
+              />
+            }
+            offLabel={
+              <IconMoonStars
+                size={16}
+                stroke={2.5}
+                color="var(--mantine-color-blue-6)"
+              />
+            }
+          />
+        </Group>
+      )}
+
+      {mobile && (
+        <Drawer
+          opened={drawerOpened}
+          onClose={() => setDrawerOpened(false)}
+          padding="md"
+          size="70%"
+          overlayProps={{ opacity: 0.4, blur: 3 }}
+          position="left"
+          title={
+            <Text fw={700} size="lg" style={{ letterSpacing: "-0.02em" }}>
+              Weatherly ☀️
+            </Text>
+          }
+        >
+          <Sidebar onNavigate={() => setDrawerOpened(false)} />
+
+          <Box
+            mt="lg"
+            pt="md"
+            style={{
+              borderTop: "1px solid var(--mantine-color-gray-3)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingInline: "0.5rem",
+            }}
+          >
+            <Text fw={500} size="sm">
+              Theme
+            </Text>
+            <Switch
+              checked={checked}
+              onChange={handleSwitchChange}
+              size="md"
+              color="dark.4"
+              thumbIcon={
+                checked ? (
+                  <IconSun
+                    size={14}
+                    stroke={2.5}
+                    color="var(--mantine-color-yellow-4)"
+                  />
+                ) : (
+                  <IconMoonStars
+                    size={14}
+                    stroke={2.5}
+                    color="var(--mantine-color-blue-6)"
+                  />
+                )
+              }
+              styles={{
+                track: {
+                  backgroundColor: checked
+                    ? "var(--mantine-color-dark-6)"
+                    : "var(--mantine-color-gray-3)",
+                  borderColor: "transparent",
+                },
+              }}
+            />
+          </Box>
+        </Drawer>
+      )}
     </Group>
   );
 };

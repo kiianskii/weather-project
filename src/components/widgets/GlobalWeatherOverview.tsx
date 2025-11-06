@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
-import { Grid, Center, Loader, Container } from "@mantine/core";
+import {
+  Grid,
+  Center,
+  Loader,
+  Container,
+  Title,
+  Divider,
+  Group,
+  Text,
+  Box,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import GlobalWeatherCard from "./cards/GlobalWeatherCard";
 import { fetchWeather } from "../../api/weatherApi";
 
@@ -38,6 +50,11 @@ export default function GlobalWeatherOverview() {
   const [data, setData] = useState<CityWeatherAPI[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
+  const mobile = useMediaQuery("(max-width: 767px)");
+
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -69,7 +86,48 @@ export default function GlobalWeatherOverview() {
     );
 
   return (
-    <Container fluid p="xl" style={{ minHeight: "100%" }}>
+    <Container
+      fluid
+      px={mobile ? "sm" : "xl"}
+      py={mobile ? "md" : "xl"}
+      style={{
+        minHeight: "100%",
+        transition: "background 0.3s ease",
+      }}
+    >
+      {/* HEADER */}
+      <Box mb={mobile ? "md" : "xl"}>
+        <Group justify="space-between" align="center">
+          <Box>
+            <Title
+              order={mobile ? 3 : 2}
+              style={{
+                letterSpacing: "-0.02em",
+                fontWeight: 700,
+              }}
+            >
+              Global Weather Overview 🌍
+            </Title>
+            <Text
+              size="sm"
+              c="dimmed"
+              mt={4}
+              style={{ maxWidth: 480, lineHeight: 1.4 }}
+            >
+              Stay informed with real-time weather updates for major cities
+              around the world.
+            </Text>
+          </Box>
+        </Group>
+
+        <Divider
+          my={mobile ? "md" : "lg"}
+          variant="dashed"
+          color={isDark ? "gray.7" : "gray.3"}
+        />
+      </Box>
+
+      {/* GRID OF CARDS */}
       <Grid gutter="lg" justify="center">
         {data.map((weather) => (
           <Grid.Col span={{ base: 12, md: 6 }} key={weather.city}>

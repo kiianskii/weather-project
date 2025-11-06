@@ -10,6 +10,7 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useWeatherStore } from "../../../store/weatherStore";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface WeatherCardProps {
   weather: any;
@@ -22,33 +23,31 @@ interface WeekDayData {
 }
 
 const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
+  const mobile = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
   const current_weather = weather?.current_weather;
   const hourly = weather?.hourly;
   const daily = weather?.daily;
   const city = weather?.city || "Unknown";
 
+  if (!current_weather || !hourly || !daily) return null;
+
+  const { setCity } = useWeatherStore();
+
   const getClosestHourIndex = (times: string[], currentTime: string) => {
     const target = new Date(currentTime).getTime();
-    let closestIndex = 0;
-    let smallestDiff = Infinity;
-
-    times.forEach((t, i) => {
+    return times.reduce((closest, t, i) => {
       const diff = Math.abs(new Date(t).getTime() - target);
-      if (diff < smallestDiff) {
-        smallestDiff = diff;
-        closestIndex = i;
-      }
-    });
-
-    return closestIndex;
+      return diff < Math.abs(new Date(times[closest]).getTime() - target)
+        ? i
+        : closest;
+    }, 0);
   };
+
   const closestIndex = getClosestHourIndex(
     weather.hourly.time,
     weather.current_weather.time
   );
-
-  if (!current_weather || !hourly || !daily) return null;
 
   let weatherType: "sunny" | "cloudy" | "rainy" | "stormy" = "sunny";
   if (current_weather.weathercode >= 3 && current_weather.weathercode < 60)
@@ -60,15 +59,15 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
     weatherType = "rainy";
   else if (current_weather.weathercode >= 95) weatherType = "stormy";
 
-  const backgrounds: Record<typeof weatherType, string> = {
+  const backgrounds = {
     sunny:
-      "https://images.unsplash.com/photo-1615286628718-4a4c8924d0eb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740",
+      "https://images.unsplash.com/photo-1615286628718-4a4c8924d0eb?auto=format&fit=crop&q=80&w=1740",
     cloudy:
-      "https://images.unsplash.com/photo-1723943158162-71320cd8b830?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1931",
+      "https://images.unsplash.com/photo-1723943158162-71320cd8b830?auto=format&fit=crop&q=80&w=1931",
     rainy:
-      "https://images.unsplash.com/photo-1620385019253-b051a26048ce?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=774",
+      "https://images.unsplash.com/photo-1620385019253-b051a26048ce?auto=format&fit=crop&q=80&w=774",
     stormy:
-      "https://images.unsplash.com/photo-1620385019253-b051a26048ce?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=774",
+      "https://images.unsplash.com/photo-1620385019253-b051a26048ce?auto=format&fit=crop&q=80&w=774",
   };
 
   const icons = {
@@ -77,12 +76,11 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
     rainy: IconCloudRain,
     stormy: IconCloudStorm,
   };
-
   const WeatherIcon = icons[weatherType];
 
-  const { setCity } = useWeatherStore();
   const handleClick = () => {
-    setCity(city.toLowerCase()), navigate(`/city`);
+    setCity(city.toLowerCase());
+    navigate(`/city`);
   };
 
   const weekData: WeekDayData[] = daily.time.map((time: string, i: number) => ({
@@ -95,7 +93,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
     <Card
       shadow="md"
       radius="lg"
-      p="md"
+      p={mobile ? "sm" : "md"}
       onClick={handleClick}
       style={{
         display: "flex",
@@ -109,7 +107,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
         cursor: "pointer",
         overflow: "hidden",
         transition: "transform 0.2s ease",
-        height: "100%",
+        height: mobile ? "auto" : "100%",
       }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -124,27 +122,33 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
         }}
       />
 
+      {/* === CURRENT WEATHER INFO === */}
       <Group
         justify="space-between"
         style={{
           position: "relative",
           zIndex: 1,
           width: "100%",
-          height: 180,
+          height: mobile ? 120 : 180,
           flexShrink: 0,
+          alignItems: "center",
         }}
       >
-        <Stack justify="center" gap="xs" style={{ paddingLeft: "1rem" }}>
-          <Text size="lg" fw={700}>
+        <Stack
+          justify="center"
+          gap={mobile ? 2 : "xs"}
+          style={{ paddingLeft: mobile ? "0.5rem" : "1rem" }}
+        >
+          <Text size={mobile ? "md" : "lg"} fw={700}>
             {city}
           </Text>
-          <Group align="center" gap="xs" style={{ height: 40 }}>
-            <WeatherIcon size={36} />
+          <Group align="center" gap="xs" style={{ height: mobile ? 30 : 40 }}>
+            <WeatherIcon size={mobile ? 24 : 36} />
             <Text
-              size="2rem"
+              size={mobile ? "xl" : "2rem"}
               fw={700}
               style={{
-                minWidth: 85,
+                minWidth: mobile ? 60 : 85,
                 textAlign: "center",
                 letterSpacing: "-0.03em",
               }}
@@ -152,39 +156,43 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
               {current_weather.temperature.toFixed(1)}°C
             </Text>
           </Group>
-          <Text size="sm" c="rgba(255,255,255,0.8)">
-            {weatherType === "sunny"
-              ? "Sunny and clear"
-              : weatherType === "cloudy"
-              ? "Cloudy skies"
-              : weatherType === "rainy"
-              ? "Rainy weather"
-              : "Thunderstorms"}
-          </Text>
+          {!mobile && (
+            <Text size="sm" c="rgba(255,255,255,0.8)">
+              {weatherType === "sunny"
+                ? "Sunny and clear"
+                : weatherType === "cloudy"
+                ? "Cloudy skies"
+                : weatherType === "rainy"
+                ? "Rainy weather"
+                : "Thunderstorms"}
+            </Text>
+          )}
         </Stack>
 
         <Stack
           justify="center"
-          gap={6}
+          gap={mobile ? 2 : 6}
           style={{
-            paddingRight: "1rem",
+            paddingRight: mobile ? "0.5rem" : "1rem",
             textAlign: "right",
-            minWidth: 110,
+            minWidth: mobile ? 80 : 110,
           }}
         >
           <Group gap={4} justify="flex-end">
-            <IconWind size={14} />
-            <Text size="sm">{current_weather.windspeed} km/h</Text>
+            <IconWind size={mobile ? 12 : 14} />
+            <Text size={mobile ? "xs" : "sm"}>
+              {current_weather.windspeed} km/h
+            </Text>
           </Group>
           <Group gap={4} justify="flex-end">
-            <IconDroplet size={14} />
-            <Text size="sm">
+            <IconDroplet size={mobile ? 12 : 14} />
+            <Text size={mobile ? "xs" : "sm"}>
               {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
             </Text>
           </Group>
           <Group gap={4} justify="flex-end">
-            <IconGauge size={14} />
-            <Text size="sm">
+            <IconGauge size={mobile ? 12 : 14} />
+            <Text size={mobile ? "xs" : "sm"}>
               {weather.hourly.surface_pressure?.[closestIndex]
                 ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
                     0
@@ -195,57 +203,74 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
         </Stack>
       </Group>
 
+      {/* === WEEK FORECAST === */}
       <ScrollArea
         type="never"
         style={{
           position: "relative",
           zIndex: 1,
-          marginTop: "0.5rem",
+          marginTop: mobile ? "0.25rem" : "0.5rem",
           background: "rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(6px)",
-          padding: "0.5rem",
+          padding: mobile ? "0.25rem" : "0.5rem",
           borderRadius: "1rem",
+          overflowY: "hidden",
         }}
       >
         <Group
-          gap="xs"
+          gap={mobile ? 4 : "xs"}
           style={{
             width: "max-content",
             padding: "0 0.25rem",
           }}
         >
-          {weekData.map((d: WeekDayData, i: number) => {
+          {weekData.map((d, i) => {
             const rain = daily.precipitation_sum?.[i] ?? 0;
             const rainProb = daily.precipitation_probability_max?.[i] ?? 0;
 
             const getIcon = (rain: number, prob: number) => {
               if (prob > 70 || rain > 5)
                 return (
-                  <IconCloudRain style={{ margin: "4px auto" }} size={20} />
+                  <IconCloudRain
+                    size={mobile ? 16 : 20}
+                    style={{ margin: "4px auto" }}
+                  />
                 );
               if (prob > 30)
-                return <IconCloud style={{ margin: "4px auto" }} size={20} />;
-              return <IconSun style={{ margin: "4px auto" }} size={20} />;
+                return (
+                  <IconCloud
+                    size={mobile ? 16 : 20}
+                    style={{ margin: "4px auto" }}
+                  />
+                );
+              return (
+                <IconSun
+                  size={mobile ? 16 : 20}
+                  style={{ margin: "4px auto" }}
+                />
+              );
             };
 
             return (
               <Card
                 key={i}
                 radius="md"
-                p="xs"
+                p={mobile ? 4 : "xs"}
                 style={{
                   background: "rgba(0,0,0,0.35)",
                   color: "#fff",
-                  minWidth: 80,
+                  minWidth: mobile ? 60 : 80,
                   textAlign: "center",
                   flexShrink: 0,
                 }}
               >
-                <Text fw={600} size="sm">
+                <Text fw={600} size={mobile ? "xs" : "sm"}>
                   {d.date}
                 </Text>
                 {getIcon(rain, rainProb)}
-                <Text fw={600}>{d.temp.toFixed(0)}°C</Text>
+                <Text fw={600} size={mobile ? "sm" : "md"}>
+                  {d.temp.toFixed(0)}°C
+                </Text>
               </Card>
             );
           })}

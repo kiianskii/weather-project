@@ -1,25 +1,40 @@
 import { AppShell, ScrollArea } from "@mantine/core";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 const AppLayout = ({ children }: AppLayoutProps) => {
+  const mobile = useMediaQuery("(max-width: 767px)");
+
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 220, breakpoint: 0 }}
+      // показуємо navbar тільки на десктопі
+      navbar={
+        mobile
+          ? undefined
+          : {
+              width: 220,
+              breakpoint: 0,
+            }
+      }
       padding="md"
     >
+      {/* Header завжди */}
       <AppShell.Header>
         <Header />
       </AppShell.Header>
 
-      <AppShell.Navbar>
-        <Sidebar />
-      </AppShell.Navbar>
+      {/* Sidebar тільки на десктопі */}
+      {!mobile && (
+        <AppShell.Navbar p="sm">
+          <Sidebar />
+        </AppShell.Navbar>
+      )}
 
       <AppShell.Main
         style={{

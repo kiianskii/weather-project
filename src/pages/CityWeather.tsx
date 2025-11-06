@@ -10,9 +10,12 @@ import PressureChart from "../components/widgets/CityWeatherWidgets/PressureChar
 
 import WindOverview from "../components/widgets/CityWeatherWidgets/WindOverview";
 import ShortCards from "../components/widgets/CityWeatherWidgets/ShortCards";
+import SearchBarMobile from "../components/widgets/SearchBar/SearchBarMobile";
+import { useMediaQuery } from "@mantine/hooks";
 
 const CityWeather = () => {
   const { weather, loadingWeather, city } = useWeatherStore();
+  const mobile = useMediaQuery("(max-width: 767px)");
 
   if (!city || !weather) {
     return (
