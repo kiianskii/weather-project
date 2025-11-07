@@ -13,9 +13,11 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 import Sidebar from "./Sidebar";
 import SearchBarMobile from "../widgets/SearchBar/SearchBarMobile";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const mobile = useMediaQuery("(max-width: 767px)");
+  const navigate = useNavigate();
 
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
@@ -46,7 +48,12 @@ const Header = () => {
             <IconMenu2 size={22} />
           </ActionIcon>
         )}
-        <Text fw={700} size="lg" style={{ letterSpacing: "-0.02em" }}>
+        <Text
+          fw={700}
+          size="lg"
+          style={{ letterSpacing: "-0.02em" }}
+          onClick={() => navigate("/")}
+        >
           Weatherly ☀️
         </Text>
       </Group>

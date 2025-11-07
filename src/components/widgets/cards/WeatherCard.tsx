@@ -1,4 +1,5 @@
 import { Card, Group, Stack, Text, Divider } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import {
   IconSun,
   IconCloud,
@@ -16,6 +17,7 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
   const current_weather = weather?.current_weather;
   const hourly = weather?.hourly;
   const city = weather?.city || "Unknown";
+  const mobile = useMediaQuery("(max-width: 767px)");
 
   if (!current_weather || !hourly) return null;
 
@@ -68,7 +70,7 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
       p="md"
       style={{
         width: "100%",
-        maxWidth: 300,
+        maxWidth: mobile ? "100%" : 300,
         color: "#fff",
         backgroundImage: `url(${backgrounds[weatherType]})`,
         backgroundSize: "cover",
@@ -120,17 +122,21 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
 
           <Group gap={2}>
             <IconDroplet size={16} />
-            <Text size="sm">  {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
- </Text>
+            <Text size="sm">
+              {" "}
+              {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
+            </Text>
           </Group>
 
           <Group gap={2}>
             <IconGauge size={16} />
-            <Text size="sm">{weather.hourly.surface_pressure?.[closestIndex]
+            <Text size="sm">
+              {weather.hourly.surface_pressure?.[closestIndex]
                 ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
                     0
                   )} hPa`
-                : "—"}</Text>
+                : "—"}
+            </Text>
           </Group>
         </Group>
       </Stack>

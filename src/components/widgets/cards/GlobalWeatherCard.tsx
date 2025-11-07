@@ -32,7 +32,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
 
   if (!current_weather || !hourly || !daily) return null;
 
-  const { setCity } = useWeatherStore();
+  const { fetchWeatherData } = useWeatherStore();
 
   const getClosestHourIndex = (times: string[], currentTime: string) => {
     const target = new Date(currentTime).getTime();
@@ -79,7 +79,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
   const WeatherIcon = icons[weatherType];
 
   const handleClick = () => {
-    setCity(city.toLowerCase());
+    fetchWeatherData(city.toLowerCase());
     navigate(`/city`);
   };
 

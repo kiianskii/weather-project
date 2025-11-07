@@ -9,11 +9,13 @@ import {
 import { IconMapPin, IconChevronDown } from "@tabler/icons-react";
 import SearchBarEditMode from "../SearchBar/SearchBarEditMode";
 import { useWeatherStore } from "../../../store/weatherStore";
+import { useNavigate } from "react-router-dom";
 
 const SearchBarMobile = () => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
   const { city, fetchWeatherData } = useWeatherStore();
+  const navigate = useNavigate();
 
   const [opened, setOpened] = useState(false);
   const [query, setQuery] = useState("");
@@ -24,6 +26,7 @@ const SearchBarMobile = () => {
     try {
       await fetchWeatherData(trimmed);
       setOpened(false);
+      navigate("/city");
       setQuery("");
     } catch (err) {
       console.error(err);

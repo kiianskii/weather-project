@@ -74,7 +74,9 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
       style={{
         flex: 1,
         background: "rgba(255, 255, 255, 0.08)",
-        backdropFilter: "blur(6px)",
+        border: isDark
+          ? "1px solid rgba(255,255,255,0.1)"
+          : "1px solid rgba(0,0,0,0.15)",
       }}
     >
       <Text size="sm" fw={600} mb="xs">

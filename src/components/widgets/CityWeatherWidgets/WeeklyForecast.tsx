@@ -15,6 +15,7 @@ import {
   IconSunrise,
   IconSunset,
 } from "@tabler/icons-react";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface DailyWeather {
   time: string[];
@@ -34,6 +35,7 @@ interface WeeklyForecastProps {
 const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const mobile = useMediaQuery("(max-width: 767px)");
 
   if (!daily?.time?.length) return null;
 
@@ -55,36 +57,98 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
   }));
 
   const getIcon = (rain: number, prob: number) => {
-    if (prob > 70 || rain > 5) return <IconCloudRain size={20} />;
-    if (prob > 30) return <IconCloud size={20} />;
-    return <IconSun size={20} />;
+    if (prob > 70 || rain > 5) return <IconCloudRain size={mobile ? 16 : 20} />;
+    if (prob > 30) return <IconCloud size={mobile ? 16 : 20} />;
+    return <IconSun size={mobile ? 16 : 20} />;
   };
 
   return (
     <Card
       shadow="sm"
       radius="md"
-      p="md"
+      p={mobile ? "sm" : "md"}
       style={{
         flex: 1,
-        background: isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.08)",
-        backdropFilter: "blur(6px)",
+        background: isDark ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.6)",
+        border: isDark
+          ? "1px solid rgba(255,255,255,0.1)"
+          : "1px solid rgba(0,0,0,0.15)",
       }}
     >
-      <Stack gap="sm">
-        <Text size="sm" fw={600}>
+      <Stack gap={mobile ? "xs" : "sm"}>
+        <Text size={mobile ? "sm" : "md"} fw={600}>
           Weekly Forecast {city ? `– ${city}` : ""}
         </Text>
 
-        <ScrollArea offsetScrollbars type="always">
+        {mobile ? (
+          <ScrollArea
+            offsetScrollbars
+            type="always"
+            scrollbarSize={6}
+            style={{ overflowY: "hidden", paddingBottom: "0.25rem" }}
+          >
+            <Group
+              gap="sm"
+              wrap="nowrap"
+              p={4}
+              style={{ display: "flex", flexWrap: "nowrap" }}
+            >
+              {days.map((d, i) => (
+                <Card
+                  key={i}
+                  shadow="xs"
+                  radius="md"
+                  p="xs"
+                  style={{
+                    flex: "0 0 90px",
+                    textAlign: "center",
+                    background: isDark
+                      ? "linear-gradient(135deg, #2c2c3e, #3f3a56)"
+                      : "linear-gradient(135deg, #a8bfff, #cbb5ff)",
+                    border: isDark
+                      ? "1px solid rgba(255,255,255,0.15)"
+                      : "1px solid rgba(255,255,255,0.3)",
+                    color: isDark ? "#fff" : "#000",
+                    boxShadow: isDark
+                      ? "0 2px 5px rgba(0,0,0,0.25)"
+                      : "0 2px 5px rgba(0,0,0,0.15)",
+                    transition: "transform 0.15s ease, box-shadow 0.15s ease",
+                    minHeight: 120,
+                  }}
+                >
+                  <Stack gap={2} align="center">
+                    <Text size="xs" fw={600}>
+                      {d.day}
+                    </Text>
+                    {getIcon(d.rain, d.rainProb)}
+                    <Text size="xs">
+                      {Math.round(d.min)}° / {Math.round(d.max)}°
+                    </Text>
+                    <Group gap={4} justify="center">
+                      <Tooltip label={`Sunrise: ${d.sunrise}`} withArrow>
+                        <IconSunrise size={12} />
+                      </Tooltip>
+                      <Tooltip label={`Sunset: ${d.sunset}`} withArrow>
+                        <IconSunset size={12} />
+                      </Tooltip>
+                    </Group>
+                    <Group gap={3} justify="center">
+                      <IconDroplet size={12} />
+                      <Text size="xs">{d.rainProb}%</Text>
+                    </Group>
+                  </Stack>
+                </Card>
+              ))}
+            </Group>
+          </ScrollArea>
+        ) : (
+          // ===== DESKTOP: рівномірна ширина =====
           <Group
-            gap="sm"
+            gap="md"
             wrap="nowrap"
-            p="xs"
             style={{
-              display: "flex",
+              width: "100%",
               justifyContent: "space-between",
-              flexWrap: "nowrap",
             }}
           >
             {days.map((d, i) => (
@@ -94,34 +158,23 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                 radius="md"
                 p="sm"
                 style={{
-                  flex: "1 1 120px",
+                  flex: `1 1 ${100 / days.length}%`,
                   textAlign: "center",
                   background: isDark
                     ? "linear-gradient(135deg, #2c2c3e, #3f3a56)"
-                    : "linear-gradient(135deg, #9dbafc, #c6b5ff)",
+                    : "linear-gradient(135deg, #a8bfff, #cbb5ff)",
                   border: isDark
-                    ? "1px solid rgba(255,255,255,0.2)"
+                    ? "1px solid rgba(255,255,255,0.15)"
                     : "1px solid rgba(255,255,255,0.3)",
                   color: isDark ? "#fff" : "#000",
                   boxShadow: isDark
-                    ? "0 2px 6px rgba(0,0,0,0.3)"
-                    : "0 2px 6px rgba(0,0,0,0.15)",
+                    ? "0 2px 5px rgba(0,0,0,0.25)"
+                    : "0 2px 5px rgba(0,0,0,0.15)",
                   transition: "transform 0.15s ease, box-shadow 0.15s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = isDark
-                    ? "0 4px 12px rgba(0,0,0,0.5)"
-                    : "0 4px 12px rgba(0,0,0,0.25)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = isDark
-                    ? "0 2px 6px rgba(0,0,0,0.3)"
-                    : "0 2px 6px rgba(0,0,0,0.15)";
-                  e.currentTarget.style.transform = "translateY(0)";
+                  minHeight: 140,
                 }}
               >
-                <Stack gap={3} align="center">
+                <Stack gap={4} align="center">
                   <Text size="sm" fw={600}>
                     {d.day}
                   </Text>
@@ -139,13 +192,13 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                   </Group>
                   <Group gap={4} justify="center">
                     <IconDroplet size={14} />
-                    <Text size="xs">{d.rainProb}%</Text>
+                    <Text size="sm">{d.rainProb}%</Text>
                   </Group>
                 </Stack>
               </Card>
             ))}
           </Group>
-        </ScrollArea>
+        )}
       </Stack>
     </Card>
   );

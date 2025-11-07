@@ -41,7 +41,9 @@ const PressureChart = ({ hourly }: PressureChartProps) => {
         background: isDark
           ? "rgba(255, 255, 255, 0.05)"
           : "rgba(255, 255, 255, 0.8)",
-        backdropFilter: "blur(8px)",
+        border: isDark
+          ? "1px solid rgba(255,255,255,0.1)"
+          : "1px solid rgba(0,0,0,0.15)",
       }}
     >
       <Text fw={600} mb="sm" size="sm">

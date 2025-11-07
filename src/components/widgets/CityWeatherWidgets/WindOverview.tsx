@@ -53,7 +53,9 @@ const CustomTooltip = ({
         style={{
           background: isDark ? "rgba(40,40,50,0.9)" : "rgba(255,255,255,0.95)",
           borderRadius: "8px",
-          border: "1px solid rgba(0,0,0,0.1)",
+          border: isDark
+            ? "1px solid rgba(255,255,255,0.1)"
+            : "1px solid rgba(0,0,0,0.15)",
         }}
       >
         <Text fw={600}>{label}</Text>
