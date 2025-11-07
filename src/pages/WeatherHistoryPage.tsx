@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconAlertCircle } from "@tabler/icons-react";
+import { useMediaQuery } from "@mantine/hooks";
 
 import { useWeatherStore } from "../store/weatherStore";
 import { WeatherHistoryForm } from "../components/widgets/WeatherHistory/WeatherHistoryForm";
@@ -21,6 +22,7 @@ import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
 export default function WeatherHistoryPage() {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const mobile = useMediaQuery("(max-width: 767px)");
 
   const {
     setHistoryCity,
@@ -81,7 +83,6 @@ export default function WeatherHistoryPage() {
         },
       });
 
-      // очищення після показу
       clearHistoryError();
     }
   }, [historyError, clearHistoryError]);
@@ -95,30 +96,60 @@ export default function WeatherHistoryPage() {
   };
 
   return (
-    <Container py="xl" maw="100%">
-      <Stack gap="md">
-        <Title order={2}>Weather History</Title>
-        <Text c="dimmed" size="sm">
+    <Container
+      py={mobile ? "md" : "xl"}
+      px={mobile ? "xs" : "md"}
+      maw="100%"
+      style={{ maxWidth: mobile ? "100%" : 960 }}
+    >
+      <Stack gap={mobile ? "sm" : "md"}>
+        <Title order={mobile ? 3 : 2} ta={mobile ? "center" : "left"}>
+          Weather History
+        </Title>
+
+        <Text
+          c="dimmed"
+          size={mobile ? "xs" : "sm"}
+          ta={mobile ? "center" : "left"}
+        >
           Select a city and a date range to view past weather data.
         </Text>
 
-        <Card withBorder my="sm" radius="md" p="md" style={cardStyle}>
+        <Card
+          withBorder
+          my={mobile ? "xs" : "sm"}
+          radius={mobile ? "sm" : "md"}
+          p={mobile ? "sm" : "md"}
+          style={cardStyle}
+        >
           <WeatherHistoryForm onSubmit={handleSubmit} />
         </Card>
 
         {history ? (
           <>
-            <Card my="sm" withBorder radius="md" p="md" style={cardStyle}>
+            <Card
+              my={mobile ? "xs" : "sm"}
+              withBorder
+              radius={mobile ? "sm" : "md"}
+              p={mobile ? "sm" : "md"}
+              style={cardStyle}
+            >
               <WeatherHistoryView />
             </Card>
 
-            <Card my="sm" withBorder radius="md" p="md" style={cardStyle}>
+            <Card
+              my={mobile ? "xs" : "sm"}
+              withBorder
+              radius={mobile ? "sm" : "md"}
+              p={mobile ? "sm" : "md"}
+              style={cardStyle}
+            >
               <WeatherTrendsDashboard />
             </Card>
           </>
         ) : loading ? (
           <Center h="40vh">
-            <Loader size="xl" />
+            <Loader size={mobile ? "lg" : "xl"} />
           </Center>
         ) : (
           <WeatherPlaceholder

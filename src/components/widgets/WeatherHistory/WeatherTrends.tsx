@@ -19,6 +19,7 @@ import {
 } from "recharts";
 import { useState } from "react";
 import { useWeatherStore } from "../../../store/weatherStore";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface DailyWeather {
   time: string[];
@@ -39,9 +40,11 @@ export function WeatherTrendsDashboard() {
     history: WeatherHistory | null;
     historyCity?: string;
   };
+
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   const [active, setActive] = useState<
     "temperature" | "precipitation" | "sunshine"
@@ -88,9 +91,14 @@ export function WeatherTrendsDashboard() {
       : "1px solid rgba(0,0,0,0.15)",
   };
 
+  // Адаптивні марджини для графіків
+  const chartMargin = isMobile
+    ? { top: 10, right: 10, left: -15, bottom: 0 }
+    : { top: 10, right: 20, left: 0, bottom: 0 };
+
   return (
     <Stack gap="lg">
-      <Text fw={600} size="lg" ta="center">
+      <Text fw={600} size={isMobile ? "md" : "lg"} ta="center">
         {historyCity ? `Weather Trends for ${historyCity}` : "Weather Trends"}
       </Text>
 
@@ -104,24 +112,45 @@ export function WeatherTrendsDashboard() {
         ]}
         fullWidth
         radius="xl"
+        size={isMobile ? "xs" : "sm"}
       />
 
-      <Card withBorder radius="lg" p="lg" style={cardStyle}>
+      <Card
+        withBorder
+        radius="lg"
+        p={isMobile ? "sm" : "lg"}
+        style={{
+          ...cardStyle,
+          paddingLeft: isMobile ? 4 : undefined,
+          paddingRight: isMobile ? 4 : undefined,
+        }}
+      >
         {active === "temperature" && (
           <>
-            <Text fw={500} mb="sm">
+            <Text fw={500} mb="sm" ta={isMobile ? "center" : "left"}>
               Temperature (°C)
             </Text>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart
-                data={tempData}
-                margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
-              >
+            <ResponsiveContainer width="100%" height={isMobile ? 220 : 250}>
+              <LineChart data={tempData} margin={chartMargin}>
                 <CartesianGrid stroke={gridColor} vertical={false} />
-                <XAxis dataKey="date" stroke={axisColor} tickLine={false} />
-                <YAxis stroke={axisColor} tickLine={false} />
+                <XAxis
+                  dataKey="date"
+                  stroke={axisColor}
+                  tickLine={false}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
+                />
+                <YAxis
+                  stroke={axisColor}
+                  tickLine={false}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
+                  width={isMobile ? 30 : 40}
+                />
                 <Tooltip
-                  contentStyle={{ background: tooltipBg, borderRadius: 8 }}
+                  contentStyle={{
+                    background: tooltipBg,
+                    borderRadius: 8,
+                    fontSize: isMobile ? 12 : 14,
+                  }}
                   labelStyle={{ color: tooltipLabel }}
                 />
                 <Line
@@ -129,18 +158,24 @@ export function WeatherTrendsDashboard() {
                   dataKey="min"
                   stroke={theme.colors.blue[5]}
                   name="Min"
+                  dot={false}
+                  strokeWidth={2}
                 />
                 <Line
                   type="monotone"
                   dataKey="mean"
                   stroke={theme.colors.red[5]}
                   name="Mean"
+                  dot={false}
+                  strokeWidth={2}
                 />
                 <Line
                   type="monotone"
                   dataKey="max"
                   stroke={theme.colors.orange[5]}
                   name="Max"
+                  dot={false}
+                  strokeWidth={2}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -149,25 +184,37 @@ export function WeatherTrendsDashboard() {
 
         {active === "precipitation" && (
           <>
-            <Text fw={500} mb="sm">
+            <Text fw={500} mb="sm" ta={isMobile ? "center" : "left"}>
               Precipitation (mm)
             </Text>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart
-                data={precipitationData}
-                margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
-              >
+            <ResponsiveContainer width="100%" height={isMobile ? 200 : 220}>
+              <BarChart data={precipitationData} margin={chartMargin}>
                 <CartesianGrid stroke={gridColor} vertical={false} />
-                <XAxis dataKey="date" stroke={axisColor} tickLine={false} />
-                <YAxis stroke={axisColor} tickLine={false} />
+                <XAxis
+                  dataKey="date"
+                  stroke={axisColor}
+                  tickLine={false}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
+                />
+                <YAxis
+                  stroke={axisColor}
+                  tickLine={false}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
+                  width={isMobile ? 30 : 40}
+                />
                 <Tooltip
-                  contentStyle={{ background: tooltipBg, borderRadius: 8 }}
+                  contentStyle={{
+                    background: tooltipBg,
+                    borderRadius: 8,
+                    fontSize: isMobile ? 12 : 14,
+                  }}
                   labelStyle={{ color: tooltipLabel }}
                 />
                 <Bar
                   dataKey="precipitation"
                   fill={theme.colors.blue[6]}
                   opacity={0.6}
+                  barSize={isMobile ? 8 : 14}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -176,19 +223,30 @@ export function WeatherTrendsDashboard() {
 
         {active === "sunshine" && (
           <>
-            <Text fw={500} mb="sm">
+            <Text fw={500} mb="sm" ta={isMobile ? "center" : "left"}>
               Sunshine Hours (h)
             </Text>
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart
-                data={sunshineData}
-                margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
-              >
+            <ResponsiveContainer width="100%" height={isMobile ? 200 : 220}>
+              <LineChart data={sunshineData} margin={chartMargin}>
                 <CartesianGrid stroke={gridColor} vertical={false} />
-                <XAxis dataKey="date" stroke={axisColor} tickLine={false} />
-                <YAxis stroke={axisColor} tickLine={false} />
+                <XAxis
+                  dataKey="date"
+                  stroke={axisColor}
+                  tickLine={false}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
+                />
+                <YAxis
+                  stroke={axisColor}
+                  tickLine={false}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
+                  width={isMobile ? 30 : 40}
+                />
                 <Tooltip
-                  contentStyle={{ background: tooltipBg, borderRadius: 8 }}
+                  contentStyle={{
+                    background: tooltipBg,
+                    borderRadius: 8,
+                    fontSize: isMobile ? 12 : 14,
+                  }}
                   labelStyle={{ color: tooltipLabel }}
                 />
                 <Line
@@ -196,6 +254,7 @@ export function WeatherTrendsDashboard() {
                   dataKey="sunshine"
                   stroke={theme.colors.yellow[5]}
                   dot={false}
+                  strokeWidth={2}
                 />
               </LineChart>
             </ResponsiveContainer>
