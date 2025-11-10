@@ -39,7 +39,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <AppShell.Main
         style={{
           height: "100vh",
-          overflow: "hidden",
+          //   overflow: "hidden",
           display: "flex",
           flexDirection: "column",
         }}

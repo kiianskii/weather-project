@@ -14,6 +14,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import Sidebar from "./Sidebar";
 import SearchBarMobile from "../widgets/SearchBar/SearchBarMobile";
 import { useNavigate } from "react-router-dom";
+import { WeatherIcon } from "../../shared/icons/WeatherIcon";
 
 const Header = () => {
   const mobile = useMediaQuery("(max-width: 767px)");
@@ -51,10 +52,16 @@ const Header = () => {
         <Text
           fw={700}
           size="lg"
-          style={{ letterSpacing: "-0.02em" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            cursor: "pointer",
+          }}
           onClick={() => navigate("/")}
         >
-          Weatherly ☀️
+          <WeatherIcon size={24} />
+          Weatherly
         </Text>
       </Group>
       {mobile && <SearchBarMobile />}
@@ -94,8 +101,17 @@ const Header = () => {
           overlayProps={{ opacity: 0.4, blur: 3 }}
           position="left"
           title={
-            <Text fw={700} size="lg" style={{ letterSpacing: "-0.02em" }}>
-              Weatherly ☀️
+            <Text
+              fw={700}
+              size="lg"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <WeatherIcon size={24} />
+              Weatherly
             </Text>
           }
         >
