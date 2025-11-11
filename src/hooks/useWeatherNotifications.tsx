@@ -2,12 +2,14 @@ import { useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useMantineColorScheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
 export const useWeatherNotifications = (
   weatherError: string | null,
   clearWeatherError: () => void
 ) => {
   const { colorScheme } = useMantineColorScheme();
+  const mobile = useMediaQuery("(max-width: 767px)");
 
   useEffect(() => {
     if (!weatherError) return;
@@ -38,7 +40,7 @@ export const useWeatherNotifications = (
         ),
       styles: (theme) => ({
         root: {
-          maxWidth: 440,
+          maxWidth: mobile ? 340 : 440,
           padding: "16px 18px",
           borderRadius: theme.radius.md,
           backgroundColor:
@@ -50,6 +52,10 @@ export const useWeatherNotifications = (
         title: { fontWeight: 700, marginBottom: 6 },
         description: { fontSize: theme.fontSizes.sm },
         icon: { marginTop: 4 },
+        position: "fixed",
+        top: 20,
+        right: 20,
+        zIndex: 2077,
       }),
     });
 

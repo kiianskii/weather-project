@@ -11,7 +11,7 @@ import "@mantine/dates/styles.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <MantineProvider>
-      <Notifications zIndex={99999} withinPortal />
+      <Notifications />
       <App />
     </MantineProvider>
   </React.StrictMode>

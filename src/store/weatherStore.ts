@@ -69,7 +69,8 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
       );
 
       const location = geo.data.results?.[0];
-      if (!location) throw new Error("City not found");
+
+      if (location === undefined) throw new Error("City not found");
 
       const { latitude, longitude } = location;
       const data = await fetchWeather(latitude, longitude);
@@ -84,6 +85,7 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
         weatherError: err.message || "Failed to fetch weather data",
         loadingWeather: false,
       });
+      throw err;
     }
   },
 

@@ -122,7 +122,6 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
         }}
       />
 
-      {/* === CURRENT WEATHER INFO === */}
       <Group
         justify="space-between"
         style={{
@@ -203,7 +202,6 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
         </Stack>
       </Group>
 
-      {/* === WEEK FORECAST === */}
       <ScrollArea
         type="never"
         style={{

@@ -10,15 +10,19 @@ import { IconMapPin, IconChevronDown } from "@tabler/icons-react";
 import SearchBarEditMode from "../SearchBar/SearchBarEditMode";
 import { useWeatherStore } from "../../../store/weatherStore";
 import { useNavigate } from "react-router-dom";
+import { useWeatherNotifications } from "../../../hooks/useWeatherNotifications";
 
 const SearchBarMobile = () => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
-  const { city, fetchWeatherData } = useWeatherStore();
+  const { city, fetchWeatherData, weatherError, clearWeatherError } =
+    useWeatherStore();
   const navigate = useNavigate();
 
   const [opened, setOpened] = useState(false);
   const [query, setQuery] = useState("");
+
+  useWeatherNotifications(weatherError, clearWeatherError);
 
   const handleSearch = async () => {
     const trimmed = query.trim();

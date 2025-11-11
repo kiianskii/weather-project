@@ -102,9 +102,9 @@ const ShortCards = ({ weather }: WeatherCardProps) => {
         <Grid.Col
           key={index}
           span={{
-            base: 6, // 2 картки в ряд для мобільних
+            base: 6,
             sm: 6,
-            md: 3, // 4 картки в ряд для десктопу
+            md: 3,
           }}
         >
           <Card

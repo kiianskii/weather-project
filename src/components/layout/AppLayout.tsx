@@ -1,4 +1,4 @@
-import { AppShell, ScrollArea } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { useMediaQuery } from "@mantine/hooks";
@@ -13,7 +13,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <AppShell
       header={{ height: 60 }}
-      // показуємо navbar тільки на десктопі
       navbar={
         mobile
           ? undefined
@@ -24,12 +23,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       }
       padding="md"
     >
-      {/* Header завжди */}
       <AppShell.Header>
         <Header />
       </AppShell.Header>
 
-      {/* Sidebar тільки на десктопі */}
       {!mobile && (
         <AppShell.Navbar p="sm">
           <Sidebar />
@@ -39,12 +36,12 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <AppShell.Main
         style={{
           height: "100vh",
-          //   overflow: "hidden",
+          overflow: "auto",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <ScrollArea style={{ flex: 1 }}>{children}</ScrollArea>
+        {children}
       </AppShell.Main>
     </AppShell>
   );

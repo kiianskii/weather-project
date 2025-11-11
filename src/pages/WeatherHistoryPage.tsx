@@ -100,7 +100,7 @@ export default function WeatherHistoryPage() {
       py={mobile ? "md" : "xl"}
       px={mobile ? "xs" : "md"}
       maw="100%"
-      style={{ maxWidth: mobile ? "100%" : 960 }}
+      style={{ marginInline: 0 }}
     >
       <Stack gap={mobile ? "sm" : "md"}>
         <Title order={mobile ? 3 : 2} ta={mobile ? "center" : "left"}>

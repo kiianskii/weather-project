@@ -93,9 +93,9 @@ export default function GlobalWeatherOverview() {
       style={{
         minHeight: "100%",
         transition: "background 0.3s ease",
+        marginInline: 0,
       }}
     >
-      {/* HEADER */}
       <Box mb={mobile ? "md" : "xl"}>
         <Group justify="space-between" align="center">
           <Box>
@@ -126,8 +126,6 @@ export default function GlobalWeatherOverview() {
           color={isDark ? "gray.7" : "gray.3"}
         />
       </Box>
-
-      {/* GRID OF CARDS */}
       <Grid gutter="lg" justify="center">
         {data.map((weather) => (
           <Grid.Col span={{ base: 12, md: 6 }} key={weather.city}>

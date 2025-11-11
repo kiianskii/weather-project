@@ -16,6 +16,7 @@ import SearchBarMobile from "../widgets/SearchBar/SearchBarMobile";
 import { useNavigate } from "react-router-dom";
 import { WeatherIcon } from "../../shared/icons/WeatherIcon";
 
+
 const Header = () => {
   const mobile = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
@@ -65,7 +66,6 @@ const Header = () => {
         </Text>
       </Group>
       {mobile && <SearchBarMobile />}
-
       {!mobile && (
         <Group gap="sm">
           <SearchBar />

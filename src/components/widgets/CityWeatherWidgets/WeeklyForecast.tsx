@@ -142,7 +142,6 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
             </Group>
           </ScrollArea>
         ) : (
-          // ===== DESKTOP: рівномірна ширина =====
           <Group
             gap="md"
             wrap="nowrap"
