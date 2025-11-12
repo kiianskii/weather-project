@@ -13,17 +13,6 @@ const CityWeather = () => {
   const { weather, loadingWeather, city } = useWeatherStore();
   const mobile = useMediaQuery("(max-width: 767px)");
 
-  if (!city || !weather) {
-    return (
-      <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
-        <WeatherPlaceholder
-          title="Weather Forecast"
-          description="Enter a city name in the search bar above to see detailed weather information."
-        />
-      </Stack>
-    );
-  }
-
   return (
     <Stack
       gap={mobile ? "md" : "lg"}
@@ -44,7 +33,16 @@ const CityWeather = () => {
         </Flex>
       )}
 
-      {!loadingWeather && (
+      {!loadingWeather && (!city || !weather) && (
+        <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
+          <WeatherPlaceholder
+            title="Weather Forecast"
+            description="Enter a city name in the search bar above to see detailed weather information."
+          />
+        </Stack>
+      )}
+
+      {!loadingWeather && city && weather && (
         <>
           <Flex
             direction={mobile ? "column" : "row"}
@@ -57,9 +55,7 @@ const CityWeather = () => {
           </Flex>
 
           <ShortCards weather={weather} />
-
           <WeeklyForecast daily={weather.daily} city={weather.city} />
-
           <PressureChart hourly={weather.hourly} />
           <WindOverview weather={weather} />
         </>

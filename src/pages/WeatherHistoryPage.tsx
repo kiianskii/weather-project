@@ -149,7 +149,7 @@ export default function WeatherHistoryPage() {
           </>
         ) : loading ? (
           <Center h="40vh">
-            <Loader size={mobile ? "lg" : "xl"} />
+            <Loader size="lg" />
           </Center>
         ) : (
           <WeatherPlaceholder

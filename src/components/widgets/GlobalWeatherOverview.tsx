@@ -81,7 +81,7 @@ export default function GlobalWeatherOverview() {
   if (loading)
     return (
       <Center h="80vh">
-        <Loader color="blue" size="xl" />
+        <Loader size="lg" />
       </Center>
     );
 
