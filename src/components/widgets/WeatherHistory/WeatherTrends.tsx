@@ -36,7 +36,7 @@ interface WeatherHistory {
 }
 
 export function WeatherTrendsDashboard() {
-  const { history, historyCity } = useWeatherStore() as {
+  const { history } = useWeatherStore() as {
     history: WeatherHistory | null;
     historyCity?: string;
   };
@@ -99,7 +99,7 @@ export function WeatherTrendsDashboard() {
   return (
     <Stack gap="lg">
       <Text fw={600} size={isMobile ? "md" : "lg"} ta="center">
-        {historyCity ? `Weather Trends for ${historyCity}` : "Weather Trends"}
+        {"Weather Trends"}
       </Text>
 
       <SegmentedControl

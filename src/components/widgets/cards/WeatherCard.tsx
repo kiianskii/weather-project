@@ -1,4 +1,4 @@
-import { Card, Group, Stack, Text, Divider } from "@mantine/core";
+import { Card, Group, Stack, Text, Divider, Flex } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import {
   IconSun,
@@ -8,6 +8,9 @@ import {
   IconDroplet,
   IconGauge,
 } from "@tabler/icons-react";
+import { useWeatherStore } from "../../../store/weatherStore";
+
+import { CardInfoTooltip } from "../../../shared/components/CardInfoTooltip";
 
 interface WeatherCardProps {
   weather: any;
@@ -18,6 +21,16 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
   const hourly = weather?.hourly;
   const city = weather?.city || "Unknown";
   const mobile = useMediaQuery("(max-width: 767px)");
+
+  const { country } = useWeatherStore();
+
+  const location = [
+    country?.country,
+    country?.relativity1,
+    country?.relativity2,
+  ]
+    .filter(Boolean)
+    .join(", ");
 
   if (!current_weather || !hourly) return null;
 
@@ -93,9 +106,18 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
         align="center"
         style={{ position: "relative", zIndex: 1 }}
       >
-        <Text size="lg" fw={700}>
-          {city}
-        </Text>
+        <Flex
+          style={{
+            maxWidth: "100%",
+          }}
+          align="center"
+          gap={mobile ? 4 : 6}
+        >
+          <CardInfoTooltip size={20} label={location} />
+          <Text size="lg" fw={700}>
+            {city}
+          </Text>
+        </Flex>
 
         <Group gap="xs" align="center">
           <WeatherIcon size={42} />

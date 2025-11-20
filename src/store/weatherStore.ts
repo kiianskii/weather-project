@@ -11,6 +11,12 @@ interface WeatherData {
   [key: string]: any;
 }
 
+interface Country {
+  country: string;
+  relativity1: string | undefined;
+  relativity2: string | undefined;
+}
+
 interface WeatherStore {
   weather: WeatherData | null;
   history: any | null;
@@ -21,7 +27,10 @@ interface WeatherStore {
   historyError: string | null;
 
   city: string | null;
+  country: Country | null;
   historyCity: string | null;
+  historyCountry: Country | null;
+
   dateRange: DatesRangeValue;
 
   fetchWeatherData: (city: string) => Promise<void>;
@@ -50,8 +59,11 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   weatherError: null,
   historyError: null,
 
+  country: null,
   city: null,
   historyCity: null,
+  historyCountry: null,
+
   dateRange: [null, null],
 
   fetchWeatherData: async (city: string) => {
@@ -79,6 +91,11 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
         weather: { ...data, city: location.name },
         loadingWeather: false,
         city: location.name,
+        country: {
+          country: location?.country,
+          relativity1: location?.admin1,
+          relativity2: location?.admin2,
+        },
       });
     } catch (err: any) {
       set({
@@ -118,6 +135,11 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
         history: historyData,
         loadingHistory: false,
         historyCity: location.name,
+        historyCountry: {
+          country: location?.country,
+          relativity1: location?.admin1,
+          relativity2: location?.admin2,
+        },
       });
     } catch (err: any) {
       set({

@@ -15,9 +15,18 @@ import { IconSun, IconCloud, IconCloudRain } from "@tabler/icons-react";
 import { useRef, useState, useEffect } from "react";
 
 export function WeatherHistoryView() {
-  const { history, loadingHistory, historyCity } = useWeatherStore();
+  const { history, loadingHistory, historyCity, historyCountry } =
+    useWeatherStore();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+
+  const location = [
+    historyCountry?.country,
+    historyCountry?.relativity1,
+    historyCountry?.relativity2,
+  ]
+    .filter(Boolean)
+    .join(", ");
 
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [cardHeight, setCardHeight] = useState<number>(0);
@@ -55,7 +64,7 @@ export function WeatherHistoryView() {
     <Stack gap="lg">
       <Text fw={600} size="lg" ta="center">
         {historyCity
-          ? `Historical Weather for ${historyCity}`
+          ? `Historical Weather for ${historyCity}, ${location}`
           : "Historical Weather"}
       </Text>
 
