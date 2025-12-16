@@ -8,6 +8,7 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconCloud, IconCloudRain, IconSun } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 interface HourlyWeather {
   time: string[];
@@ -32,6 +33,8 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
   const { colorScheme } = useMantineColorScheme();
 
   const isDark = colorScheme === "dark";
+
+  const { t } = useTranslation();
 
   const hours = hourly.time
     .map((time, index) => ({
@@ -80,7 +83,7 @@ const HourlyForecast = ({ hourly }: HourlyForecastProps) => {
       }}
     >
       <Text size="sm" fw={600} mb="xs">
-        Hourly Forecast
+        {t("hourlyForecast")}
       </Text>
 
       <ScrollArea viewportRef={scrollAreaRef} type="always" offsetScrollbars>

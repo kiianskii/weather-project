@@ -9,7 +9,7 @@ import {
   IconGauge,
 } from "@tabler/icons-react";
 import { useWeatherStore } from "../../../store/weatherStore";
-
+import { useTranslation } from "react-i18next";
 import { CardInfoTooltip } from "../../../shared/components/CardInfoTooltip";
 
 interface WeatherCardProps {
@@ -17,9 +17,10 @@ interface WeatherCardProps {
 }
 
 const WeatherCard = ({ weather }: WeatherCardProps) => {
+  const { t } = useTranslation();
   const current_weather = weather?.current_weather;
   const hourly = weather?.hourly;
-  const city = weather?.city || "Unknown";
+  const city = weather?.city || t("weather.unknownCity");
   const mobile = useMediaQuery("(max-width: 767px)");
 
   const { country } = useWeatherStore();
@@ -59,13 +60,14 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
   if (current_weather.weathercode >= 3 && current_weather.weathercode < 60)
     weatherType = "cloudy";
   else if (current_weather.weathercode >= 60) weatherType = "rainy";
+
   const backgrounds: Record<typeof weatherType, string> = {
     sunny:
-      "https://images.unsplash.com/photo-1615286628718-4a4c8924d0eb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740",
+      "https://images.unsplash.com/photo-1615286628718-4a4c8924d0eb?auto=format&fit=crop&q=80&w=1740",
     cloudy:
-      "https://images.unsplash.com/photo-1723943158162-71320cd8b830?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1931",
+      "https://images.unsplash.com/photo-1723943158162-71320cd8b830?auto=format&fit=crop&q=80&w=1931",
     rainy:
-      "https://images.unsplash.com/photo-1620385019253-b051a26048ce?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=774",
+      "https://images.unsplash.com/photo-1620385019253-b051a26048ce?auto=format&fit=crop&q=80&w=774",
   };
 
   const icons = {
@@ -75,6 +77,13 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
   };
 
   const WeatherIcon = icons[weatherType];
+
+  const weatherLabel =
+    weatherType === "sunny"
+      ? t("weather.sunny")
+      : weatherType === "cloudy"
+      ? t("weather.cloudy")
+      : t("weather.rainy");
 
   return (
     <Card
@@ -127,11 +136,7 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
         </Group>
 
         <Text size="sm" c="rgba(255,255,255,0.85)">
-          {weatherType === "sunny"
-            ? "Sunny and clear"
-            : weatherType === "cloudy"
-            ? "Cloudy skies"
-            : "Rainy weather"}
+          {weatherLabel}
         </Text>
 
         <Divider my="xs" color="rgba(255,255,255,0.3)" />
@@ -139,13 +144,14 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
         <Group gap="md" justify="center">
           <Group gap={2}>
             <IconWind size={16} />
-            <Text size="sm">{current_weather.windspeed} km/h</Text>
+            <Text size="sm">
+              {current_weather.windspeed} {t("weather.windUnit")}
+            </Text>
           </Group>
 
           <Group gap={2}>
             <IconDroplet size={16} />
             <Text size="sm">
-              {" "}
               {weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%
             </Text>
           </Group>
@@ -156,7 +162,7 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
               {weather.hourly.surface_pressure?.[closestIndex]
                 ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
                     0
-                  )} hPa`
+                  )} ${t("weather.pressureUnit")}`
                 : "—"}
             </Text>
           </Group>

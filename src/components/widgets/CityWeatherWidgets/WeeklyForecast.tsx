@@ -16,6 +16,7 @@ import {
   IconSunset,
 } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 interface DailyWeather {
   time: string[];
@@ -36,21 +37,26 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { t, i18n } = useTranslation();
 
   if (!daily?.time?.length) return null;
 
+  const locale = i18n.language;
+
   const days = daily.time.map((date, index) => ({
     date: new Date(date),
-    day: new Date(date).toLocaleDateString("en-US", { weekday: "short" }),
+    day: new Date(date).toLocaleDateString(locale, {
+      weekday: "short",
+    }),
     max: daily.temperature_2m_max[index],
     min: daily.temperature_2m_min[index],
     rain: daily.precipitation_sum[index],
     rainProb: daily.precipitation_probability_max[index],
-    sunrise: new Date(daily.sunrise[index]).toLocaleTimeString([], {
+    sunrise: new Date(daily.sunrise[index]).toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
     }),
-    sunset: new Date(daily.sunset[index]).toLocaleTimeString([], {
+    sunset: new Date(daily.sunset[index]).toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
     }),
@@ -77,7 +83,7 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
     >
       <Stack gap={mobile ? "xs" : "sm"}>
         <Text size={mobile ? "sm" : "md"} fw={600}>
-          Weekly Forecast {city ? `– ${city}` : ""}
+          {t("weeklyForecast.title", { city })}
         </Text>
 
         {mobile ? (
@@ -87,12 +93,7 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
             scrollbarSize={6}
             style={{ overflowY: "hidden", paddingBottom: "0.25rem" }}
           >
-            <Group
-              gap="sm"
-              wrap="nowrap"
-              p={4}
-              style={{ display: "flex", flexWrap: "nowrap" }}
-            >
+            <Group gap="sm" wrap="nowrap" p={4}>
               {days.map((d, i) => (
                 <Card
                   key={i}
@@ -109,10 +110,6 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                       ? "1px solid rgba(255,255,255,0.15)"
                       : "1px solid rgba(255,255,255,0.3)",
                     color: isDark ? "#fff" : "#000",
-                    boxShadow: isDark
-                      ? "0 2px 5px rgba(0,0,0,0.25)"
-                      : "0 2px 5px rgba(0,0,0,0.15)",
-                    transition: "transform 0.15s ease, box-shadow 0.15s ease",
                     minHeight: 120,
                   }}
                 >
@@ -124,14 +121,26 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                     <Text size="xs">
                       {Math.round(d.min)}° / {Math.round(d.max)}°
                     </Text>
+
                     <Group gap={4} justify="center">
-                      <Tooltip label={`Sunrise: ${d.sunrise}`} withArrow>
+                      <Tooltip
+                        label={t("weeklyForecast.sunrise", {
+                          time: d.sunrise,
+                        })}
+                        withArrow
+                      >
                         <IconSunrise size={12} />
                       </Tooltip>
-                      <Tooltip label={`Sunset: ${d.sunset}`} withArrow>
+                      <Tooltip
+                        label={t("weeklyForecast.sunset", {
+                          time: d.sunset,
+                        })}
+                        withArrow
+                      >
                         <IconSunset size={12} />
                       </Tooltip>
                     </Group>
+
                     <Group gap={3} justify="center">
                       <IconDroplet size={12} />
                       <Text size="xs">{d.rainProb}%</Text>
@@ -142,14 +151,7 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
             </Group>
           </ScrollArea>
         ) : (
-          <Group
-            gap="md"
-            wrap="nowrap"
-            style={{
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
+          <Group gap="md" wrap="nowrap" justify="space-between">
             {days.map((d, i) => (
               <Card
                 key={i}
@@ -166,10 +168,6 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                     ? "1px solid rgba(255,255,255,0.15)"
                     : "1px solid rgba(255,255,255,0.3)",
                   color: isDark ? "#fff" : "#000",
-                  boxShadow: isDark
-                    ? "0 2px 5px rgba(0,0,0,0.25)"
-                    : "0 2px 5px rgba(0,0,0,0.15)",
-                  transition: "transform 0.15s ease, box-shadow 0.15s ease",
                   minHeight: 140,
                 }}
               >
@@ -181,14 +179,26 @@ const WeeklyForecast = ({ daily, city }: WeeklyForecastProps) => {
                   <Text size="sm">
                     {Math.round(d.min)}° / {Math.round(d.max)}°
                   </Text>
+
                   <Group gap={6} justify="center">
-                    <Tooltip label={`Sunrise: ${d.sunrise}`} withArrow>
+                    <Tooltip
+                      label={t("weeklyForecast.sunrise", {
+                        time: d.sunrise,
+                      })}
+                      withArrow
+                    >
                       <IconSunrise size={16} />
                     </Tooltip>
-                    <Tooltip label={`Sunset: ${d.sunset}`} withArrow>
+                    <Tooltip
+                      label={t("weeklyForecast.sunset", {
+                        time: d.sunset,
+                      })}
+                      withArrow
+                    >
                       <IconSunset size={16} />
                     </Tooltip>
                   </Group>
+
                   <Group gap={4} justify="center">
                     <IconDroplet size={14} />
                     <Text size="sm">{d.rainProb}%</Text>

@@ -6,6 +6,7 @@ import {
   IconWind,
   IconDroplet,
 } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 interface WeatherPlaceholderProps {
   title: string;
@@ -34,6 +35,7 @@ const WeatherPlaceholder = ({
     transition: "background 0.3s ease, border 0.3s ease",
   };
 
+  const { t } = useTranslation();
   const textColor = isDark ? "#f1f1f1" : "#1a1a1a";
   const dimmedColor = isDark ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)";
 
@@ -62,31 +64,35 @@ const WeatherPlaceholder = ({
           <Stack gap={4} align="center">
             <IconSun size={32} color="#FFD93D" />
             <Text size="xs" c="dimmed">
-              Sunny
+              {t("weatherConditions.sunny")}
             </Text>
           </Stack>
+
           <Stack gap={4} align="center">
             <IconCloud size={32} color="#90A4AE" />
             <Text size="xs" c="dimmed">
-              Cloudy
+              {t("weatherConditions.cloudy")}
             </Text>
           </Stack>
+
           <Stack gap={4} align="center">
             <IconCloudRain size={32} color="#4FC3F7" />
             <Text size="xs" c="dimmed">
-              Rainy
+              {t("weatherConditions.rainy")}
             </Text>
           </Stack>
+
           <Stack gap={4} align="center">
             <IconWind size={32} color="#81D4FA" />
             <Text size="xs" c="dimmed">
-              Wind
+              {t("weatherConditions.wind")}
             </Text>
           </Stack>
+
           <Stack gap={4} align="center">
             <IconDroplet size={32} color="#29B6F6" />
             <Text size="xs" c="dimmed">
-              Humidity
+              {t("weatherConditions.humidity")}
             </Text>
           </Stack>
         </Group>

@@ -8,6 +8,7 @@ import {
   IconArrowUp,
 } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 interface WeatherCardProps {
   weather: any;
@@ -15,6 +16,7 @@ interface WeatherCardProps {
 
 const ShortCards = ({ weather }: WeatherCardProps) => {
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { t } = useTranslation();
 
   const getClosestHourIndex = (times: string[], currentTime: string) => {
     const target = new Date(currentTime).getTime();
@@ -38,8 +40,9 @@ const ShortCards = ({ weather }: WeatherCardProps) => {
   );
 
   const getWindDirection = (deg: number) => {
-    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
-    return directions[Math.round(deg / 45) % 8];
+    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    const key = directions[Math.round(deg / 45) % 8];
+    return t(`windDirections.${key}`);
   };
 
   const windDeg = weather.hourly.winddirection_10m?.[closestIndex] ?? 0;
@@ -47,9 +50,11 @@ const ShortCards = ({ weather }: WeatherCardProps) => {
 
   const cards = [
     {
-      label: "Wind",
+      label: t("shortCards.wind"),
       icon: <IconWind />,
-      value: `${weather.current_weather.windspeed} km/h`,
+      value: t("shortCards.windValue", {
+        value: weather.current_weather.windspeed,
+      }),
       extra: (
         <Stack align="center" gap={0}>
           <IconArrowUp
@@ -66,28 +71,32 @@ const ShortCards = ({ weather }: WeatherCardProps) => {
       ),
     },
     {
-      label: "Humidity",
+      label: t("shortCards.humidity"),
       icon: <IconDroplet />,
-      value: `${weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0}%`,
+      value: t("shortCards.percentValue", {
+        value: weather.hourly.relative_humidity_2m?.[closestIndex] ?? 0,
+      }),
     },
     {
-      label: "Pressure",
+      label: t("shortCards.pressure"),
       icon: <IconGauge />,
       value: weather.hourly.surface_pressure?.[closestIndex]
-        ? `${weather.hourly.surface_pressure[closestIndex].toFixed(0)} hPa`
+        ? t("shortCards.pressureValue", {
+            value: weather.hourly.surface_pressure[closestIndex].toFixed(0),
+          })
         : "—",
     },
     {
-      label: "Precipitation",
+      label: t("shortCards.precipitation"),
       icon:
         weather.hourly.precipitation_probability?.[closestIndex] > 30 ? (
           <IconCloudRain />
         ) : (
           <IconSun />
         ),
-      value: `${
-        weather.hourly.precipitation_probability?.[closestIndex] ?? 0
-      }%`,
+      value: t("shortCards.percentValue", {
+        value: weather.hourly.precipitation_probability?.[closestIndex] ?? 0,
+      }),
     },
   ];
 
@@ -99,14 +108,7 @@ const ShortCards = ({ weather }: WeatherCardProps) => {
       justify="center"
     >
       {cards.map((card, index) => (
-        <Grid.Col
-          key={index}
-          span={{
-            base: 6,
-            sm: 6,
-            md: 3,
-          }}
-        >
+        <Grid.Col key={index} span={{ base: 6, sm: 6, md: 3 }}>
           <Card
             shadow="sm"
             p={mobile ? "sm" : "md"}
@@ -136,7 +138,7 @@ const ShortCards = ({ weather }: WeatherCardProps) => {
                   </Text>
                 </Stack>
               </Group>
-              {card.extra && card.extra}
+              {card.extra}
             </Group>
           </Card>
         </Grid.Col>

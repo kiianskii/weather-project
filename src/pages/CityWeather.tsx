@@ -8,10 +8,12 @@ import ShortCards from "../components/widgets/CityWeatherWidgets/ShortCards";
 import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
 import { useWeatherStore } from "../store/weatherStore";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 const CityWeather = () => {
   const { weather, loadingWeather, city } = useWeatherStore();
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { t } = useTranslation();
 
   return (
     <Stack
@@ -36,8 +38,8 @@ const CityWeather = () => {
       {!loadingWeather && (!city || !weather) && (
         <Stack gap="lg" style={{ padding: "1rem", width: "100%" }}>
           <WeatherPlaceholder
-            title="Weather Forecast"
-            description="Enter a city name in the search bar above to see detailed weather information."
+            title={t("placeholder.weatherForecastTitle")}
+            description={t("placeholder.weatherForecastDescription")}
           />
         </Stack>
       )}

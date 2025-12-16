@@ -1,5 +1,6 @@
 import { NavLink, Stack } from "@mantine/core";
 import { IconHome, IconCalendar, IconHistory } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarProps {
@@ -9,33 +10,36 @@ interface SidebarProps {
 const Sidebar = ({ onNavigate }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <Stack gap="xs" style={{ width: "100%" }}>
       <NavLink
-        label="Home"
+        label={t("sidebar.home")}
         leftSection={<IconHome size={16} />}
         active={location.pathname === "/"}
         onClick={() => {
-          if (onNavigate) onNavigate();
+          onNavigate?.();
           navigate("/");
         }}
       />
+
       <NavLink
-        label="City Forecast"
+        label={t("sidebar.cityForecast")}
         leftSection={<IconCalendar size={16} />}
         active={location.pathname === "/city"}
         onClick={() => {
-          if (onNavigate) onNavigate();
+          onNavigate?.();
           navigate("/city");
         }}
       />
+
       <NavLink
-        label="Weather History"
+        label={t("sidebar.weatherHistory")}
         leftSection={<IconHistory size={16} />}
         active={location.pathname === "/history"}
         onClick={() => {
-          if (onNavigate) onNavigate();
+          onNavigate?.();
           navigate("/history");
         }}
       />

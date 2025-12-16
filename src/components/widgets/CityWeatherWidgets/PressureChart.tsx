@@ -8,6 +8,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 
 interface PressureChartProps {
   hourly: {
@@ -19,6 +20,7 @@ interface PressureChartProps {
 const PressureChart = ({ hourly }: PressureChartProps) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const { t } = useTranslation();
 
   if (!hourly?.time?.length || !hourly.surface_pressure?.length) return null;
 
@@ -47,7 +49,7 @@ const PressureChart = ({ hourly }: PressureChartProps) => {
       }}
     >
       <Text fw={600} mb="sm" size="sm">
-        Pressure trend today (hPa)
+        {t("pressureChart.title")}
       </Text>
 
       <div style={{ width: "100%", height: 220 }}>
@@ -57,16 +59,19 @@ const PressureChart = ({ hourly }: PressureChartProps) => {
               strokeDasharray="3 3"
               stroke={isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)"}
             />
+
             <XAxis
               dataKey="hour"
               tick={{ fill: isDark ? "#ddd" : "#333", fontSize: 12 }}
               tickFormatter={(h) => `${h}:00`}
             />
+
             <YAxis
               domain={["dataMin - 2", "dataMax + 2"]}
               tick={{ fill: isDark ? "#ccc" : "#555", fontSize: 12 }}
               width={40}
             />
+
             <Tooltip
               contentStyle={{
                 background: isDark
@@ -75,13 +80,20 @@ const PressureChart = ({ hourly }: PressureChartProps) => {
                 borderRadius: "8px",
                 border: "1px solid rgba(0,0,0,0.1)",
               }}
-              labelFormatter={(h) => `Hour: ${h}:00`}
+              labelFormatter={(h) =>
+                t("pressureChart.tooltipHour", { hour: h })
+              }
               formatter={(value) => {
                 const val =
                   typeof value === "number" ? value.toFixed(1) : value;
-                return [`${val} hPa`, "Pressure"];
+
+                return [
+                  t("pressureChart.tooltipValue", { value: val }),
+                  t("pressureChart.pressure"),
+                ];
               }}
             />
+
             <Line
               type="monotone"
               dataKey="pressure"

@@ -11,6 +11,7 @@ import SearchBarEditMode from "../SearchBar/SearchBarEditMode";
 import { useWeatherStore } from "../../../store/weatherStore";
 import { useNavigate } from "react-router-dom";
 import { useWeatherNotifications } from "../../../hooks/useWeatherNotifications";
+import { useTranslation } from "react-i18next";
 
 const SearchBarMobile = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -18,6 +19,7 @@ const SearchBarMobile = () => {
   const { city, fetchWeatherData, weatherError, clearWeatherError } =
     useWeatherStore();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [opened, setOpened] = useState(false);
   const [query, setQuery] = useState("");
@@ -27,6 +29,7 @@ const SearchBarMobile = () => {
   const handleSearch = async () => {
     const trimmed = query.trim();
     if (!trimmed) return;
+
     try {
       await fetchWeatherData(trimmed);
       setOpened(false);
@@ -51,7 +54,7 @@ const SearchBarMobile = () => {
           color: isDark ? "#fff" : "#333",
         }}
       >
-        {city || "Choose city"}
+        {city || t("searchBar.chooseCity")}
       </Button>
 
       <Dialog
@@ -62,7 +65,6 @@ const SearchBarMobile = () => {
         p="md"
         style={{
           maxWidth: 280,
-
           marginInline: "auto",
           background: isDark ? "rgba(30,30,30,0.95)" : "#fff",
           boxShadow:
@@ -71,7 +73,7 @@ const SearchBarMobile = () => {
         position={{ top: 50, right: 10 }}
       >
         <Text fw={600} mb="sm" size="sm" ta="center">
-          {city ? "Search for another city" : "Search for a city"}
+          {city ? t("searchBar.searchAnotherCity") : t("searchBar.searchCity")}
         </Text>
 
         <SearchBarEditMode

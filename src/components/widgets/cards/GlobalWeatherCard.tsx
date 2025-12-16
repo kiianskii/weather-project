@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useWeatherStore } from "../../../store/weatherStore";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 interface WeatherCardProps {
   weather: any;
@@ -23,12 +24,13 @@ interface WeekDayData {
 }
 
 const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
+  const { t } = useTranslation();
   const mobile = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
   const current_weather = weather?.current_weather;
   const hourly = weather?.hourly;
   const daily = weather?.daily;
-  const city = weather?.city || "Unknown";
+  const city = weather?.city || t("weather.unknownCity");
 
   if (!current_weather || !hourly || !daily) return null;
 
@@ -83,11 +85,33 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
     navigate(`/city`);
   };
 
-  const weekData: WeekDayData[] = daily.time.map((time: string, i: number) => ({
-    date: new Date(time).toLocaleDateString("en-US", { weekday: "short" }),
-    temp: daily.temperature_2m_max?.[i] ?? 0,
-    code: daily.weathercode?.[i] ?? 0,
-  }));
+  // Локалізовані дні тижня
+  const weekData: WeekDayData[] = daily.time.map((time: string, i: number) => {
+    const dayShort = new Date(time).toLocaleDateString("en-US", {
+      weekday: "short",
+    });
+    const localizedDay = t(`weather.weekdayShort.${dayShort}`);
+    return {
+      date: localizedDay,
+      temp: daily.temperature_2m_max?.[i] ?? 0,
+      code: daily.weathercode?.[i] ?? 0,
+    };
+  });
+
+  const getWeatherDescription = (type: string) => {
+    switch (type) {
+      case "sunny":
+        return t("weather.sunny");
+      case "cloudy":
+        return t("weather.cloudy");
+      case "rainy":
+        return t("weather.rainy");
+      case "stormy":
+        return t("weather.stormy");
+      default:
+        return t("weather.unknown");
+    }
+  };
 
   return (
     <Card
@@ -157,13 +181,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
           </Group>
           {!mobile && (
             <Text size="sm" c="rgba(255,255,255,0.8)">
-              {weatherType === "sunny"
-                ? "Sunny and clear"
-                : weatherType === "cloudy"
-                ? "Cloudy skies"
-                : weatherType === "rainy"
-                ? "Rainy weather"
-                : "Thunderstorms"}
+              {getWeatherDescription(weatherType)}
             </Text>
           )}
         </Stack>
@@ -180,7 +198,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
           <Group gap={4} justify="flex-end">
             <IconWind size={mobile ? 12 : 14} />
             <Text size={mobile ? "xs" : "sm"}>
-              {current_weather.windspeed} km/h
+              {current_weather.windspeed} {t("weather.windUnit")}
             </Text>
           </Group>
           <Group gap={4} justify="flex-end">
@@ -195,7 +213,7 @@ const GlobalWeatherCard = ({ weather }: WeatherCardProps) => {
               {weather.hourly.surface_pressure?.[closestIndex]
                 ? `${weather.hourly.surface_pressure[closestIndex].toFixed(
                     0
-                  )} hPa`
+                  )} ${t("weather.pressureUnit")}`
                 : "—"}
             </Text>
           </Group>

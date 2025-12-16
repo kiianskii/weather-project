@@ -3,6 +3,7 @@ import { IconSearch, IconX } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 import { InfoTooltip } from "../../../shared/components/InfoTooltip";
 import { useWeatherStore } from "../../../store/weatherStore";
+import { useTranslation } from "react-i18next";
 
 interface SearchBarEditModeProps {
   query: string;
@@ -18,8 +19,8 @@ const SearchBarEditMode = ({
   onCancel,
 }: SearchBarEditModeProps) => {
   const mobile = useMediaQuery("(max-width: 767px)");
-
   const { city } = useWeatherStore();
+  const { t } = useTranslation();
 
   return (
     <Transition mounted transition="fade" duration={200}>
@@ -33,17 +34,14 @@ const SearchBarEditMode = ({
           gap={mobile ? 4 : 6}
         >
           {!mobile && (
-            <InfoTooltip
-              size={20}
-              label="Search works with English names only."
-            />
+            <InfoTooltip size={20} label={t("searchBar.englishOnlyHint")} />
           )}
 
           <TextInput
             value={query}
             onChange={(e) => onQueryChange(e.currentTarget.value)}
             onKeyDown={(e) => e.key === "Enter" && onSearch()}
-            placeholder="Enter city name..."
+            placeholder={t("searchBar.enterCity")}
             size={mobile ? "sm" : "xs"}
             radius="xl"
             leftSection={
@@ -53,7 +51,7 @@ const SearchBarEditMode = ({
                 color="blue"
                 variant="subtle"
                 onClick={onSearch}
-                title="Search"
+                title={t("searchBar.search")}
               >
                 <IconSearch size={mobile ? 14 : 16} />
               </ActionIcon>
@@ -66,7 +64,7 @@ const SearchBarEditMode = ({
                 color="gray"
                 variant="subtle"
                 onClick={() => query && onQueryChange("")}
-                title="Clear"
+                title={t("searchBar.clear")}
                 style={{
                   opacity: query ? 1 : 0,
                   pointerEvents: query ? "auto" : "none",
@@ -104,7 +102,7 @@ const SearchBarEditMode = ({
                 padding: mobile ? "2px 6px" : undefined,
               }}
             >
-              Cancel
+              {t("searchBar.cancel")}
             </Button>
           )}
         </Flex>

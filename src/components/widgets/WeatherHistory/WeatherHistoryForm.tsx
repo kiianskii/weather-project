@@ -1,16 +1,10 @@
 import { useState } from "react";
-import {
-  Button,
-  TextInput,
-  Box,
-  Group,
-  Stack,
-  useMantineTheme,
-} from "@mantine/core";
+import { Button, TextInput, Box, Group, Stack } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { IconCalendar, IconSearch, IconX } from "@tabler/icons-react";
 import { useWeatherStore } from "../../../store/weatherStore";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 interface WeatherHistoryFormProps {
   onSubmit: (city: string, startDate: string, endDate: string) => void;
@@ -21,8 +15,9 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
     useWeatherStore();
 
   const [city, setCity] = useState(historyCity || "");
-  const theme = useMantineTheme();
-  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+
+  const mobile = useMediaQuery(`(max-width: 1080px)`);
+  const { t } = useTranslation();
 
   const handleSubmit = () => {
     if (!city || !dateRange?.[0] || !dateRange?.[1]) return;
@@ -52,15 +47,15 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
         display: mobile ? "block" : "flex",
         gap: mobile ? 8 : 12,
         alignItems: mobile ? "stretch" : "flex-end",
-        maxWidth: 750,
+        maxWidth: 850,
         width: "100%",
       }}
     >
       {mobile ? (
         <Stack gap="sm">
           <TextInput
-            label="City"
-            placeholder="Enter city name"
+            label={t("history.cityLabel")}
+            placeholder={t("history.cityPlaceholder")}
             value={city}
             onChange={(e) => setCity(e.currentTarget.value)}
             leftSection={<IconSearch size={16} />}
@@ -68,7 +63,7 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
 
           <DatePickerInput
             type="range"
-            label="Start date / End date"
+            label={t("history.dateRangeLabel")}
             value={dateRange}
             onChange={setDateRange}
             valueFormat="YYYY MMM DD"
@@ -76,12 +71,12 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
             clearable
             leftSection={<IconCalendar />}
             maxDate={new Date()}
-            placeholder="Pick date range"
+            placeholder={t("history.dateRangePlaceholder")}
           />
 
           <Group grow gap="sm">
             <Button onClick={handleSubmit} variant="light">
-              Show history
+              {t("history.showHistory")}
             </Button>
 
             <Button
@@ -91,15 +86,15 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
               leftSection={<IconX size={16} />}
               disabled={!city && !dateRange[0]}
             >
-              Clear
+              {t("history.clear")}
             </Button>
           </Group>
         </Stack>
       ) : (
         <>
           <TextInput
-            label="City"
-            placeholder="Enter city name"
+            label={t("history.cityLabel")}
+            placeholder={t("history.cityPlaceholder")}
             value={city}
             onChange={(e) => setCity(e.currentTarget.value)}
             leftSection={<IconSearch size={16} />}
@@ -108,7 +103,7 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
 
           <DatePickerInput
             type="range"
-            label="Start date / End date"
+            label={t("history.dateRangeLabel")}
             value={dateRange}
             onChange={setDateRange}
             valueFormat="YYYY MMM DD"
@@ -117,16 +112,16 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
             leftSection={<IconCalendar />}
             style={{ width: 260, minWidth: 260 }}
             maxDate={new Date()}
-            placeholder="Pick date range"
+            placeholder={t("history.dateRangePlaceholder")}
           />
 
           <Group gap="xs" align="end">
             <Button
               onClick={handleSubmit}
               variant="light"
-              style={{ width: 140, minWidth: 140 }}
+              style={{ maxWidthwidth: 200, minWidth: 140 }}
             >
-              Show history
+              {t("history.showHistory")}
             </Button>
 
             <Button
@@ -134,10 +129,10 @@ export function WeatherHistoryForm({ onSubmit }: WeatherHistoryFormProps) {
               variant="light"
               color="gray"
               leftSection={<IconX size={16} />}
-              style={{ width: 100, minWidth: 100 }}
+              style={{ maxWidth: 130, minWidth: 100 }}
               disabled={!city && !dateRange[0]}
             >
-              Clear
+              {t("history.clear")}
             </Button>
           </Group>
         </>

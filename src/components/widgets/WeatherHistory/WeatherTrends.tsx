@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { useWeatherStore } from "../../../store/weatherStore";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 interface DailyWeather {
   time: string[];
@@ -36,6 +37,7 @@ interface WeatherHistory {
 }
 
 export function WeatherTrendsDashboard() {
+  const { t } = useTranslation();
   const { history } = useWeatherStore() as {
     history: WeatherHistory | null;
     historyCity?: string;
@@ -55,7 +57,10 @@ export function WeatherTrendsDashboard() {
   const { daily } = history;
 
   const dates = daily.time.map((d) =>
-    new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "short" })
+    new Date(d).toLocaleDateString(undefined, {
+      day: "numeric",
+      month: "short",
+    })
   );
 
   const tempData = daily.time.map((_, i) => ({
@@ -91,7 +96,6 @@ export function WeatherTrendsDashboard() {
       : "1px solid rgba(0,0,0,0.15)",
   };
 
-  // Адаптивні марджини для графіків
   const chartMargin = isMobile
     ? { top: 10, right: 10, left: -15, bottom: 0 }
     : { top: 10, right: 20, left: 0, bottom: 0 };
@@ -99,16 +103,16 @@ export function WeatherTrendsDashboard() {
   return (
     <Stack gap="lg">
       <Text fw={600} size={isMobile ? "md" : "lg"} ta="center">
-        {"Weather Trends"}
+        {t("trends.weatherTrends")}
       </Text>
 
       <SegmentedControl
         value={active}
         onChange={(val) => setActive(val as typeof active)}
         data={[
-          { label: "Temperature", value: "temperature" },
-          { label: "Precipitation", value: "precipitation" },
-          { label: "Sunshine", value: "sunshine" },
+          { label: t("trends.temperature"), value: "temperature" },
+          { label: t("trends.precipitation"), value: "precipitation" },
+          { label: t("trends.sunshine"), value: "sunshine" },
         ]}
         fullWidth
         radius="xl"
@@ -128,7 +132,7 @@ export function WeatherTrendsDashboard() {
         {active === "temperature" && (
           <>
             <Text fw={500} mb="sm" ta={isMobile ? "center" : "left"}>
-              Temperature (°C)
+              {t("trends.temperatureUnit")}
             </Text>
             <ResponsiveContainer width="100%" height={isMobile ? 220 : 250}>
               <LineChart data={tempData} margin={chartMargin}>
@@ -157,7 +161,7 @@ export function WeatherTrendsDashboard() {
                   type="monotone"
                   dataKey="min"
                   stroke={theme.colors.blue[5]}
-                  name="Min"
+                  name={t("trends.min")}
                   dot={false}
                   strokeWidth={2}
                 />
@@ -165,7 +169,7 @@ export function WeatherTrendsDashboard() {
                   type="monotone"
                   dataKey="mean"
                   stroke={theme.colors.red[5]}
-                  name="Mean"
+                  name={t("trends.mean")}
                   dot={false}
                   strokeWidth={2}
                 />
@@ -173,7 +177,7 @@ export function WeatherTrendsDashboard() {
                   type="monotone"
                   dataKey="max"
                   stroke={theme.colors.orange[5]}
-                  name="Max"
+                  name={t("trends.max")}
                   dot={false}
                   strokeWidth={2}
                 />
@@ -185,7 +189,7 @@ export function WeatherTrendsDashboard() {
         {active === "precipitation" && (
           <>
             <Text fw={500} mb="sm" ta={isMobile ? "center" : "left"}>
-              Precipitation (mm)
+              {t("trends.precipitationUnit")}
             </Text>
             <ResponsiveContainer width="100%" height={isMobile ? 200 : 220}>
               <BarChart data={precipitationData} margin={chartMargin}>
@@ -215,6 +219,7 @@ export function WeatherTrendsDashboard() {
                   fill={theme.colors.blue[6]}
                   opacity={0.6}
                   barSize={isMobile ? 8 : 14}
+                  name={t("trends.precipitation")}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -224,7 +229,7 @@ export function WeatherTrendsDashboard() {
         {active === "sunshine" && (
           <>
             <Text fw={500} mb="sm" ta={isMobile ? "center" : "left"}>
-              Sunshine Hours (h)
+              {t("trends.sunshineUnit")}
             </Text>
             <ResponsiveContainer width="100%" height={isMobile ? 200 : 220}>
               <LineChart data={sunshineData} margin={chartMargin}>
@@ -255,6 +260,7 @@ export function WeatherTrendsDashboard() {
                   stroke={theme.colors.yellow[5]}
                   dot={false}
                   strokeWidth={2}
+                  name={t("trends.sunshine")}
                 />
               </LineChart>
             </ResponsiveContainer>

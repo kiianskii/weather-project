@@ -30,7 +30,7 @@ interface WeatherStore {
   country: Country | null;
   historyCity: string | null;
   historyCountry: Country | null;
-
+  savedLanguage: { [key: string]: string } | null;
   dateRange: DatesRangeValue;
 
   fetchWeatherData: (city: string) => Promise<void>;
@@ -43,11 +43,17 @@ interface WeatherStore {
   clearWeather: () => void;
   clearHistory: () => void;
   setCity: (city: string | null) => void;
+  setLanguage: (city: string | null) => void;
   setHistoryCity: (city: string | null) => void;
   setDateRange: (cred: DatesRangeValue) => void;
   clearWeatherError: () => void;
   clearHistoryError: () => void;
 }
+
+const loadFromLocalStorage = <T>(key: string, defaultValue: T) => {
+  const saved = localStorage.getItem(key);
+  return saved ? JSON.parse(saved) : defaultValue;
+};
 
 export const useWeatherStore = create<WeatherStore>((set) => ({
   weather: null,
@@ -65,6 +71,8 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   historyCountry: null,
 
   dateRange: [null, null],
+
+  savedLanguage: loadFromLocalStorage("savedLanguage", null),
 
   fetchWeatherData: async (city: string) => {
     try {
@@ -150,6 +158,21 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   },
 
   setCity: (city: string | null) => set({ city }),
+  setLanguage: (lang: string | null) => {
+    let language: { [key: string]: string };
+
+    if (lang === "en") {
+      language = { en: "English" };
+    } else if (lang === "uk") {
+      language = { uk: "Ukrainian" };
+    } else {
+      language = { en: "English" };
+    }
+
+    localStorage.setItem("savedLanguage", JSON.stringify(language));
+
+    set({ savedLanguage: language });
+  },
   setHistoryCity: (city: string | null) => set({ historyCity: city }),
   setDateRange: (cred: DatesRangeValue) => set({ dateRange: cred }),
 

@@ -1,0 +1,138 @@
+{
+  "english": "English",
+  "ukrainian": "Ukrainian",
+  "sidebar": {
+    "home": "Home",
+    "cityForecast": "City Forecast",
+    "weatherHistory": "Weather History"
+  },
+  "language": "Language",
+  "theme": "Theme",
+  "searchBar": {
+    "chooseCity": "Choose city",
+    "searchCity": "Search for a city",
+    "searchAnotherCity": "Search for another city",
+    "editCity": "Edit city",
+    "clearCity": "Clear city",
+    "enterCity": "Enter city name...",
+    "search": "Search",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "englishOnlyHint": "Search works with English names only."
+  },
+  "globalWeather": {
+    "title": "Global Weather Overview",
+    "subtitle": "Stay informed with real-time weather updates for major cities around the world."
+  },
+  "hourlyForecast": "Hourly Forecast",
+
+  "pressureChart": {
+    "title": "Pressure trend today (hPa)",
+    "pressure": "Pressure",
+    "tooltipHour": "Hour: {{hour}}:00",
+    "tooltipValue": "{{value}} hPa"
+  },
+  "shortCards": {
+    "wind": "Wind",
+    "humidity": "Humidity",
+    "pressure": "Pressure",
+    "precipitation": "Precipitation",
+    "windValue": "{{value}} km/h",
+    "pressureValue": "{{value}} hPa",
+    "percentValue": "{{value}}%"
+  },
+  "windDirections": {
+    "N": "N",
+    "NE": "NE",
+    "E": "E",
+    "SE": "SE",
+    "S": "S",
+    "SW": "SW",
+    "W": "W",
+    "NW": "NW"
+  },
+  "weeklyForecast": {
+    "title": "Weekly Forecast{{city, string, ? – {{city}}}}",
+    "sunrise": "Sunrise: {{time}}",
+    "sunset": "Sunset: {{time}}"
+  },
+
+  "wind": {
+    "title": "Wind Flow (24h)",
+    "subtitle": "Speed & direction",
+    "speed": "Speed",
+    "direction": "Direction"
+  },
+  "units": {
+    "kmh": "km/h"
+  },
+  "placeholder": {
+    "weatherForecastTitle": "Weather Forecast",
+    "weatherForecastDescription": "Enter a city name in the search bar above to see detailed weather information."
+  },
+  "weatherConditions": {
+    "sunny": "Sunny",
+    "cloudy": "Cloudy",
+    "rainy": "Rainy",
+    "wind": "Wind",
+    "humidity": "Humidity"
+  },
+  "history": {
+    "cityLabel": "City",
+    "cityPlaceholder": "Enter city name",
+    "dateRangeLabel": "Start date / End date",
+    "dateRangePlaceholder": "Pick date range",
+    "showHistory": "Show history",
+    "clear": "Clear",
+
+    "noDataForDates": "No historical data available for the selected dates.",
+    "selectCityAndDates": "Please select a city and date range.",
+    "historicalWeather": "Historical Weather",
+    "historicalWeatherFor": "Historical Weather for {{city}}, {{location}}",
+    "showMore": "Show more",
+    "hide": "Hide",
+    "min": "Min",
+    "max": "Max",
+    "rain": "Rain",
+
+    "pageTitle": "Weather History",
+    "pageDescription": "Select a city and a date range to view past weather data.",
+    "errorTitle": "Historical weather request failed",
+    "errorCityNotFound1": "No matching results. Try another spelling or date range and check for typos.",
+    "errorCityNotFound2": "Make sure the city name is written in English letters.",
+    "placeholderTitle": "No data yet",
+    "placeholderDescription": "Please select a city and date range to begin exploring historical weather data."
+  },
+  "trends": {
+    "weatherTrends": "Weather Trends",
+    "temperature": "Temperature",
+    "precipitation": "Precipitation",
+    "sunshine": "Sunshine",
+    "temperatureUnit": "Temperature (°C)",
+    "precipitationUnit": "Precipitation (mm)",
+    "sunshineUnit": "Sunshine Hours (h)",
+    "min": "Min",
+    "mean": "Mean",
+    "max": "Max"
+  },
+
+  "weather": {
+    "sunny": "Sunny and clear",
+    "cloudy": "Cloudy skies",
+    "rainy": "Rainy weather",
+    "stormy": "Thunderstorms",
+    "unknown": "Unknown weather",
+    "unknownCity": "Unknown city",
+    "windUnit": "km/h",
+    "pressureUnit": "hPa",
+    "weekdayShort": {
+      "Mon": "Mon",
+      "Tue": "Tue",
+      "Wed": "Wed",
+      "Thu": "Thu",
+      "Fri": "Fri",
+      "Sat": "Sat",
+      "Sun": "Sun"
+    }
+  }
+}

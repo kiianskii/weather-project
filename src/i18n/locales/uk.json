@@ -1,0 +1,137 @@
+{
+  "english": "Англійська",
+  "ukrainian": "Українська",
+  "sidebar": {
+    "home": "Головна",
+    "cityForecast": "Місцевий прогноз",
+    "weatherHistory": "Історія погоди"
+  },
+  "language": "Мова",
+  "theme": "Тема",
+  "searchBar": {
+    "editCity": "Редагувати місто",
+    "clearCity": "Очистити місто",
+    "chooseCity": "Обрати місто",
+    "searchCity": "Пошук міста",
+    "searchAnotherCity": "Пошук іншого міста",
+    "enterCity": "Введіть назву міста...",
+    "search": "Пошук",
+    "clear": "Очистити",
+    "cancel": "Скасувати",
+    "englishOnlyHint": "Пошук працює лише з англійськими назвами."
+  },
+  "globalWeather": {
+    "title": "Огляд погоди у світі",
+    "subtitle": "Будьте в курсі актуальних погодних умов у найбільших містах світу."
+  },
+  "hourlyForecast": "Погодинний прогноз погоди",
+
+  "pressureChart": {
+    "title": "Зміна атмосферного тиску сьогодні (гПа)",
+    "pressure": "Тиск",
+    "tooltipHour": "Година: {{hour}}:00",
+    "tooltipValue": "{{value}} гПа"
+  },
+  "shortCards": {
+    "wind": "Вітер",
+    "humidity": "Вологість",
+    "pressure": "Тиск",
+    "precipitation": "Опади",
+    "windValue": "{{value}} км/год",
+    "pressureValue": "{{value}} гПа",
+    "percentValue": "{{value}}%"
+  },
+  "windDirections": {
+    "N": "Пн",
+    "NE": "ПнСх",
+    "E": "Сх",
+    "SE": "ПдСх",
+    "S": "Пд",
+    "SW": "ПдЗх",
+    "W": "Зх",
+    "NW": "ПнЗх"
+  },
+  "weeklyForecast": {
+    "title": "Прогноз на тиждень {{city, string, ? – {{city}}",
+    "sunrise": "Схід сонця: {{time}}",
+    "sunset": "Захід сонця: {{time}}"
+  },
+  "wind": {
+    "title": "Напрямок вітру (24 год)",
+    "subtitle": "Швидкість та напрям",
+    "speed": "Швидкість",
+    "direction": "Напрям"
+  },
+  "units": {
+    "kmh": "км/год"
+  },
+  "placeholder": {
+    "weatherForecastTitle": "Прогноз погоди",
+    "weatherForecastDescription": "Введіть назву міста у пошуковому рядку вище, щоб побачити детальну інформацію про погоду."
+  },
+  "weatherConditions": {
+    "sunny": "Сонячно",
+    "cloudy": "Хмарно",
+    "rainy": "Дощ",
+    "wind": "Вітер",
+    "humidity": "Вологість"
+  },
+  "history": {
+    "cityLabel": "Місто",
+    "cityPlaceholder": "Введіть назву міста",
+    "dateRangeLabel": "Початкова / кінцева дата",
+    "dateRangePlaceholder": "Виберіть проміжок дат",
+    "showHistory": "Показати історію",
+    "clear": "Очистити",
+
+    "noDataForDates": "Немає історичних даних для обраного проміжку дат.",
+    "selectCityAndDates": "Будь ласка, оберіть місто та проміжок дат.",
+    "historicalWeather": "Історична погода",
+    "historicalWeatherFor": "Історична погода для {{city}}, {{location}}",
+    "showMore": "Показати більше",
+    "hide": "Сховати",
+    "min": "Мін",
+    "max": "Макс",
+    "rain": "Опади",
+
+    "pageTitle": "Історія погоди",
+    "pageDescription": "Виберіть місто та діапазон дат, щоб переглянути минулі дані про погоду.",
+    "errorTitle": "Помилка запиту історичних даних",
+    "errorCityNotFound1": "Результатів не знайдено. Спробуйте інше написання або діапазон дат та перевірте орфографію.",
+    "errorCityNotFound2": "Переконайтеся, що назва міста написана латиницею.",
+    "placeholderTitle": "Дані відсутні",
+    "placeholderDescription": "Будь ласка, оберіть місто та діапазон дат, щоб почати перегляд історії погоди."
+  },
+  "trends": {
+    "weatherTrends": "Тренди погоди",
+    "temperature": "Температура",
+    "precipitation": "Опади",
+    "sunshine": "Сонячні години",
+    "temperatureUnit": "Температура (°C)",
+    "precipitationUnit": "Опади (мм)",
+    "sunshineUnit": "Сонячні години (г)",
+    "min": "Мін",
+    "mean": "Сер.",
+    "max": "Макс"
+  },
+
+  "weather": {
+    "sunny": "Сонячно і ясно",
+    "cloudy": "Хмарно",
+    "rainy": "Дощова погода",
+    "stormy": "Гроза",
+    "unknown": "Невідома погода",
+    "unknownCity": "Невідоме місто",
+    "windUnit": "км/год",
+    "pressureUnit": "гПа",
+    "weekdayShort": {
+      "Mon": "Пн",
+      "Tue": "Вт",
+      "Wed": "Ср",
+      "Thu": "Чт",
+      "Fri": "Пт",
+      "Sat": "Сб",
+      "Sun": "Нд"
+    }
+  }
+}

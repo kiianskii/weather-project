@@ -2,6 +2,7 @@ import { Badge, Box, Group, ActionIcon } from "@mantine/core";
 import { IconPencil, IconX } from "@tabler/icons-react";
 import { useMantineColorScheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 interface SearchBarViewModeProps {
   city: string;
@@ -17,6 +18,7 @@ const SearchBarViewMode = ({
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { t } = useTranslation();
 
   return (
     <Box
@@ -59,7 +61,7 @@ const SearchBarViewMode = ({
           color={isDark ? "gray" : "dark"}
           variant="subtle"
           onClick={onEdit}
-          title="Edit city"
+          title={t("searchBar.editCity")}
         >
           <IconPencil size={mobile ? 10 : 12} />
         </ActionIcon>
@@ -70,7 +72,7 @@ const SearchBarViewMode = ({
           color={isDark ? "gray" : "dark"}
           variant="subtle"
           onClick={onClear}
-          title="Clear city"
+          title={t("searchBar.clearCity")}
         >
           <IconX size={mobile ? 12 : 14} />
         </ActionIcon>

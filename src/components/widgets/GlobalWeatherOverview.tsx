@@ -14,6 +14,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import GlobalWeatherCard from "./cards/GlobalWeatherCard";
 import { fetchWeather } from "../../api/weatherApi";
+import { useTranslation } from "react-i18next";
 
 interface CityWeatherAPI {
   current_weather: {
@@ -54,6 +55,7 @@ export default function GlobalWeatherOverview() {
   const isDark = colorScheme === "dark";
 
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -106,16 +108,16 @@ export default function GlobalWeatherOverview() {
                 fontWeight: 700,
               }}
             >
-              Global Weather Overview 🌍
+              {t("globalWeather.title")} 🌍
             </Title>
+
             <Text
               size="sm"
               c="dimmed"
               mt={4}
               style={{ maxWidth: 480, lineHeight: 1.4 }}
             >
-              Stay informed with real-time weather updates for major cities
-              around the world.
+              {t("globalWeather.subtitle")}
             </Text>
           </Box>
         </Group>
@@ -126,6 +128,7 @@ export default function GlobalWeatherOverview() {
           color={isDark ? "gray.7" : "gray.3"}
         />
       </Box>
+
       <Grid gutter="lg" justify="center">
         {data.map((weather) => (
           <Grid.Col span={{ base: 12, md: 6 }} key={weather.city}>

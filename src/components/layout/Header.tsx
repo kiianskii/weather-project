@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Drawer,
   Box,
+  Select,
 } from "@mantine/core";
 import SearchBar from "../widgets/SearchBar/SearchBar";
 import { IconSun, IconMoonStars, IconMenu2 } from "@tabler/icons-react";
@@ -15,11 +16,16 @@ import Sidebar from "./Sidebar";
 import SearchBarMobile from "../widgets/SearchBar/SearchBarMobile";
 import { useNavigate } from "react-router-dom";
 import { WeatherIcon } from "../../shared/icons/WeatherIcon";
-
+import { useTranslation } from "react-i18next";
+import { useWeatherStore } from "../../store/weatherStore";
+import LangSelect from "../../shared/components/LangSelect";
 
 const Header = () => {
   const mobile = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
+  const { setLanguage } = useWeatherStore();
+
+  const { i18n, t } = useTranslation();
 
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
@@ -35,6 +41,13 @@ const Header = () => {
     const newChecked = event.currentTarget.checked;
     setChecked(newChecked);
     setColorScheme(newChecked ? "dark" : "light");
+  };
+
+  const handleLanguageChange = async (value: string | null) => {
+    if (value) {
+      i18n.changeLanguage(value);
+      setLanguage(value);
+    }
   };
 
   return (
@@ -89,6 +102,7 @@ const Header = () => {
               />
             }
           />
+          <LangSelect />
         </Group>
       )}
 
@@ -129,7 +143,7 @@ const Header = () => {
             }}
           >
             <Text fw={500} size="sm">
-              Theme
+              {t("theme")}
             </Text>
             <Switch
               checked={checked}
@@ -159,6 +173,37 @@ const Header = () => {
                   borderColor: "transparent",
                 },
               }}
+            />
+          </Box>
+
+          <Box
+            mt="lg"
+            pt="md"
+            style={{
+              borderTop: "1px solid var(--mantine-color-gray-3)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+              justifyContent: "space-between",
+              paddingInline: "0.5rem",
+              gap: 14,
+            }}
+          >
+            <Text fw={500} size="sm">
+              {t("language")}
+            </Text>
+            <Select
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              data={[
+                { value: "en", label: t("english") },
+                { value: "uk", label: t("ukrainian") },
+              ]}
+              size="sm"
+              radius="md"
+              //   mx="sm"
+              style={{ width: "100%" }}
+              comboboxProps={{ position: "top", zIndex: 1000 }}
             />
           </Box>
         </Drawer>

@@ -12,6 +12,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 import { useWeatherStore } from "../store/weatherStore";
 import { WeatherHistoryForm } from "../components/widgets/WeatherHistory/WeatherHistoryForm";
@@ -20,6 +21,7 @@ import { WeatherTrendsDashboard } from "../components/widgets/WeatherHistory/Wea
 import WeatherPlaceholder from "../components/utils/WeatherPlaceholder";
 
 export default function WeatherHistoryPage() {
+  const { t } = useTranslation();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
   const mobile = useMediaQuery("(max-width: 767px)");
@@ -54,21 +56,15 @@ export default function WeatherHistoryPage() {
     if (historyError) {
       notifications.show({
         id: "history-error",
-        title: "Historical weather request failed",
+        title: t("history.errorTitle"),
         color: "red",
         icon: <IconAlertCircle size={20} />,
         message:
           historyError === "City not found" ? (
             <div style={{ lineHeight: 1.5 }}>
-              <span>
-                No matching results. Try another spelling or date range and
-                check for <strong>typos</strong>.
-              </span>
+              <span>{t("history.errorCityNotFound1")}</span>
               <br />
-              <span>
-                Make sure the city name is written in{" "}
-                <strong>English letters</strong>.
-              </span>
+              <span>{t("history.errorCityNotFound2")}</span>
             </div>
           ) : (
             historyError
@@ -85,7 +81,7 @@ export default function WeatherHistoryPage() {
 
       clearHistoryError();
     }
-  }, [historyError, clearHistoryError]);
+  }, [historyError, clearHistoryError, t]);
 
   const cardStyle = {
     border: isDark
@@ -104,7 +100,7 @@ export default function WeatherHistoryPage() {
     >
       <Stack gap={mobile ? "sm" : "md"}>
         <Title order={mobile ? 3 : 2} ta={mobile ? "center" : "left"}>
-          Weather History
+          {t("history.pageTitle")}
         </Title>
 
         <Text
@@ -112,7 +108,7 @@ export default function WeatherHistoryPage() {
           size={mobile ? "xs" : "sm"}
           ta={mobile ? "center" : "left"}
         >
-          Select a city and a date range to view past weather data.
+          {t("history.pageDescription")}
         </Text>
 
         <Card
@@ -153,8 +149,8 @@ export default function WeatherHistoryPage() {
           </Center>
         ) : (
           <WeatherPlaceholder
-            title="No data yet"
-            description="Please select a city and date range to begin exploring historical weather data."
+            title={t("history.placeholderTitle")}
+            description={t("history.placeholderDescription")}
           />
         )}
       </Stack>

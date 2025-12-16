@@ -13,8 +13,27 @@ import {
 import { useWeatherStore } from "../../../store/weatherStore";
 import { IconSun, IconCloud, IconCloudRain } from "@tabler/icons-react";
 import { useRef, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
+const getDayName = (dateStr: string, locale: string) => {
+  const date = new Date(dateStr);
+
+  if (locale.startsWith("uk")) {
+    const dayName = new Intl.DateTimeFormat("uk", { weekday: "long" }).format(
+      date
+    );
+    return dayName.charAt(0).toUpperCase() + dayName.slice(1);
+  }
+
+  const dayName = new Intl.DateTimeFormat(locale, { weekday: "long" }).format(
+    date
+  );
+  return dayName.charAt(0).toUpperCase() + dayName.slice(1);
+};
 
 export function WeatherHistoryView() {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language || "en";
   const { history, loadingHistory, historyCity, historyCountry } =
     useWeatherStore();
   const { colorScheme } = useMantineColorScheme();
@@ -52,8 +71,8 @@ export function WeatherHistoryView() {
     return (
       <Text c="dimmed" ta="center" mt="md">
         {historyCity
-          ? "No historical data available for the selected dates."
-          : "Please select a city and date range."}
+          ? t("history.noDataForDates")
+          : t("history.selectCityAndDates")}
       </Text>
     );
   }
@@ -64,14 +83,14 @@ export function WeatherHistoryView() {
     <Stack gap="lg">
       <Text fw={600} size="lg" ta="center">
         {historyCity
-          ? `Historical Weather for ${historyCity}, ${location}`
-          : "Historical Weather"}
+          ? t("history.historicalWeatherFor", { city: historyCity, location })
+          : t("history.historicalWeather")}
       </Text>
 
       <Spoiler
         maxHeight={maxHeight}
-        showLabel="Show more"
-        hideLabel="Hide"
+        showLabel={t("history.showMore")}
+        hideLabel={t("history.hide")}
         transitionDuration={400}
       >
         <Grid gutter="md" align="stretch" justify="center">
@@ -87,10 +106,18 @@ export function WeatherHistoryView() {
                 ? IconSun
                 : IconCloud;
 
+            const formattedDate = `${getDayName(date, locale)}, ${new Date(
+              date
+            ).toLocaleDateString(locale, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}`;
+
             return (
               <Grid.Col key={date} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
                 <Card
-                  ref={i === 0 ? cardRef : null} // міряємо лише першу картку
+                  ref={i === 0 ? cardRef : null}
                   withBorder
                   radius="lg"
                   p="lg"
@@ -113,12 +140,7 @@ export function WeatherHistoryView() {
                       size="sm"
                       style={{ opacity: isDark ? 0.9 : 0.8 }}
                     >
-                      {new Date(date).toLocaleDateString("en-US", {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      {formattedDate}
                     </Text>
                     <WeatherIcon
                       size={36}
@@ -139,21 +161,21 @@ export function WeatherHistoryView() {
                   >
                     <Box ta="center">
                       <Text size="xs" c="dimmed">
-                        Min
+                        {t("history.min")}
                       </Text>
                       <Text fw={500}>{minTemp.toFixed(1)}°C</Text>
                     </Box>
 
                     <Box ta="center">
                       <Text size="xs" c="dimmed">
-                        Max
+                        {t("history.max")}
                       </Text>
                       <Text fw={500}>{maxTemp.toFixed(1)}°C</Text>
                     </Box>
 
                     <Box ta="center">
                       <Text size="xs" c="dimmed">
-                        Rain
+                        {t("history.rain")}
                       </Text>
                       <Text fw={500}>{precipitation.toFixed(1)} mm</Text>
                     </Box>

@@ -17,6 +17,7 @@ import {
   Cell,
 } from "recharts";
 import { IconArrowUp } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 interface WindOverviewProps {
   weather: any;
@@ -28,8 +29,17 @@ interface WindDataPoint {
   direction: number;
 }
 
-const getWindDirectionLabel = (deg: number) => {
-  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+const getWindDirectionLabel = (deg: number, t: any) => {
+  const directions = [
+    t("windDirections.n"),
+    t("windDirections.ne"),
+    t("windDirections.e"),
+    t("windDirections.se"),
+    t("windDirections.s"),
+    t("windDirections.sw"),
+    t("windDirections.w"),
+    t("windDirections.nw"),
+  ];
   const index = Math.round(deg / 45) % 8;
   return directions[index];
 };
@@ -45,8 +55,11 @@ const CustomTooltip = ({
 }) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const { t } = useTranslation();
+
   if (active && payload && payload.length > 0) {
     const entry = payload[0].payload as WindDataPoint;
+
     return (
       <Box
         p={8}
@@ -59,9 +72,13 @@ const CustomTooltip = ({
         }}
       >
         <Text fw={600}>{label}</Text>
-        <Text>Speed: {entry.speed.toFixed(1)} km/h</Text>
+        <Text>
+          {t("wind.speed")}: {entry.speed.toFixed(1)} {t("units.kmh")}
+        </Text>
         <Group gap={4}>
-          <Text>Dir: {getWindDirectionLabel(entry.direction)}</Text>
+          <Text>
+            {t("wind.direction")}: {getWindDirectionLabel(entry.direction, t)}
+          </Text>
           <IconArrowUp
             size={20}
             style={{
@@ -79,16 +96,19 @@ const CustomTooltip = ({
 const WindOverview: React.FC<WindOverviewProps> = ({ weather }) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const { t } = useTranslation();
 
   const data: WindDataPoint[] = [];
-  (weather?.hourly?.time ?? []).forEach((t: string, i: number) => {
-    const date = new Date(t);
+
+  (weather?.hourly?.time ?? []).forEach((tStr: string, i: number) => {
+    const date = new Date(tStr);
     const hourStr = `${date.getHours()}:00`;
+
     if (!data.some((d) => d.hour === hourStr)) {
       data.push({
         hour: hourStr,
-        speed: weather.hourly.windspeed_10m[i] ?? 0,
-        direction: weather.hourly.winddirection_10m[i] ?? 0,
+        speed: weather.hourly.windspeed_10m?.[i] ?? 0,
+        direction: weather.hourly.winddirection_10m?.[i] ?? 0,
       });
     }
   });
@@ -110,14 +130,14 @@ const WindOverview: React.FC<WindOverviewProps> = ({ weather }) => {
       <Stack gap="xs">
         <Group justify="space-between">
           <Text fw={600} size="sm">
-            Wind Flow (24h)
+            {t("wind.title")}
           </Text>
           <Text size="xs" c="dimmed">
-            Speed & direction
+            {t("wind.subtitle")}
           </Text>
         </Group>
 
-        <Box style={{ width: "100%", height: 260, position: "relative" }}>
+        <Box style={{ width: "100%", height: 260 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 10, bottom: 40 }}>
               <XAxis
@@ -131,19 +151,14 @@ const WindOverview: React.FC<WindOverviewProps> = ({ weather }) => {
                 tick={{ fontSize: 10, fill: isDark ? "#ddd" : "#333" }}
                 axisLine={false}
                 tickLine={false}
-                unit=" km/h"
+                unit={` ${t("units.kmh")}`}
               />
               <Tooltip content={<CustomTooltip />} />
 
-              <Bar
-                dataKey="speed"
-                radius={[6, 6, 0, 0]}
-                animationDuration={700}
-                animationBegin={200}
-              >
+              <Bar dataKey="speed" radius={[6, 6, 0, 0]}>
                 {data.map((entry, index) => (
                   <Cell
-                    key={`cell-${index}`}
+                    key={index}
                     fill={`hsl(${270 + entry.speed}, 70%, ${
                       isDark ? "65%" : "55%"
                     })`}
