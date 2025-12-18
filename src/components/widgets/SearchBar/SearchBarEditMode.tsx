@@ -33,9 +33,7 @@ const SearchBarEditMode = ({
           align="center"
           gap={mobile ? 4 : 6}
         >
-          {!mobile && (
-            <InfoTooltip size={20} label={t("searchBar.englishOnlyHint")} />
-          )}
+          <InfoTooltip size={20} label={t("searchBar.englishOnlyHint")} />
 
           <TextInput
             value={query}

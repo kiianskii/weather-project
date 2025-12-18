@@ -3,6 +3,7 @@ import { notifications } from "@mantine/notifications";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useMantineColorScheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
 
 export const useWeatherNotifications = (
   weatherError: string | null,
@@ -10,6 +11,7 @@ export const useWeatherNotifications = (
 ) => {
   const { colorScheme } = useMantineColorScheme();
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!weatherError) return;
@@ -18,7 +20,7 @@ export const useWeatherNotifications = (
     notifications.show({
       id: "weather-error",
       color: "red",
-      title: "Weather request failed",
+      title: t("notifications.weatherError.title"),
       icon: <IconAlertCircle size={20} />,
       autoClose: 8000,
       withCloseButton: true,
@@ -26,13 +28,23 @@ export const useWeatherNotifications = (
         weatherError === "City not found" ? (
           <div style={{ lineHeight: 1.5 }}>
             <span>
-              No results found. Please check for <strong>typos</strong> or try a
-              different <strong>spelling</strong>.
+              {t("notifications.weatherError.cityNotFound.line1")}{" "}
+              <strong>
+                {t("notifications.weatherError.cityNotFound.typos")}
+              </strong>{" "}
+              {t("notifications.weatherError.cityNotFound.or")}{" "}
+              <strong>
+                {t("notifications.weatherError.cityNotFound.spelling")}
+              </strong>
+              .
             </span>
             <br />
             <span>
-              Ensure the city name is written in{" "}
-              <strong>English letters</strong>.
+              {t("notifications.weatherError.cityNotFound.line2")}{" "}
+              <strong>
+                {t("notifications.weatherError.cityNotFound.english")}
+              </strong>
+              .
             </span>
           </div>
         ) : (
@@ -60,5 +72,5 @@ export const useWeatherNotifications = (
     });
 
     clearWeatherError();
-  }, [weatherError, clearWeatherError, colorScheme]);
+  }, [weatherError, clearWeatherError, colorScheme, t]);
 };

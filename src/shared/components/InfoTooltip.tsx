@@ -90,10 +90,6 @@ export function InfoTooltip({ label, size }: { label: string; size: number }) {
       offset={6}
       styles={{
         tooltip: commonStyles,
-        arrow: {
-          backgroundColor: isDark ? theme.colors.dark[6] : theme.colors.gray[0],
-          borderColor: isDark ? theme.colors.violet[8] : theme.colors.gray[3],
-        },
       }}
     >
       {icon}

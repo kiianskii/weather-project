@@ -134,5 +134,19 @@
       "Sat": "Sat",
       "Sun": "Sun"
     }
+  },
+
+  "notifications": {
+    "weatherError": {
+      "title": "Weather request failed",
+      "cityNotFound": {
+        "line1": "No results found. Please check for",
+        "typos": "typos",
+        "or": "or try a different",
+        "spelling": "spelling",
+        "line2": "Ensure the city name is written in",
+        "english": "English letters"
+      }
+    }
   }
 }

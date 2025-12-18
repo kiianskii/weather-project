@@ -64,7 +64,7 @@ const SearchBarMobile = () => {
         radius="md"
         p="md"
         style={{
-          maxWidth: 280,
+          maxWidth: 325,
           marginInline: "auto",
           background: isDark ? "rgba(30,30,30,0.95)" : "#fff",
           boxShadow:
